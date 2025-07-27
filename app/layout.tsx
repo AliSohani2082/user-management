@@ -4,6 +4,7 @@ import type React from "react";
 
 import { Inter } from "next/font/google";
 import { Provider } from "react-redux";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { store } from "@/store/store";
 import { Toaster } from "@/components/ui/toaster";
 import Navbar from "@/components/Navbar";
@@ -21,13 +22,15 @@ export default function RootLayout({
     <html lang="fa" dir="rtl">
       <body className={inter.className}>
         <Provider store={store}>
-          <AuthGuard>
-            <div className="min-h-screen bg-gray-50">
-              <Navbar />
-              <main>{children}</main>
-            </div>
-            <Toaster />
-          </AuthGuard>
+          <NuqsAdapter>
+            <AuthGuard>
+              <div className="min-h-screen bg-gray-50">
+                <Navbar />
+                <main>{children}</main>
+              </div>
+              <Toaster />
+            </AuthGuard>
+          </NuqsAdapter>
         </Provider>
       </body>
     </html>
