@@ -177,6 +177,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Charts Section */}
+      <div></div>
       <div className="flex flex-col justify-center items-center">
         {/* Users Grid */}
         <Card className="mb-8">

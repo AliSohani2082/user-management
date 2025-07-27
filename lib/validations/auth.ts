@@ -13,8 +13,7 @@ export const passwordSchema = z
   .string()
   .regex(/^.{5,20}$/, "تعداد حروف بین ۵ تا ۲۰ کاراکتر باشد")
   .regex(/[a-z]/, "حداقل یک حرف کوچک داشته باشد")
-  .regex(/[A-Z]/, "حداقل یک حرف بزرگ داشته باشد")
-  .regex(/\d/, "حداقل یک عدد داشته باشد");
+  .regex(/[A-Z]/, "حداقل یک حرف بزرگ داشته باشد");
 
 export const registerSchema = z
   .object({

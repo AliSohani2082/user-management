@@ -1,0 +1,10 @@
+{
+  "configurations": [
+    {
+      "type": "chrome",
+      "name": "http://cityslicka",
+      "request": "launch",
+      "url": "http://cityslicka"
+    }
+  ]
+}
