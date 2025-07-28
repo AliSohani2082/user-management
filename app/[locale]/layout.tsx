@@ -11,6 +11,7 @@ import { Toaster } from "@/components/ui/sonner";
 import { Seo } from "@/lib/seo";
 import { TailwindIndicator } from "@/components/elementary/TailwindIndicator";
 import { AppLocale } from "@/types/general";
+import Navbar from "@/components/elementary/Navbar";
 
 export async function generateMetadata({
   params,
@@ -37,6 +38,7 @@ export default async function RootLayout({ children, params }: LayoutProps) {
       <body>
         <ServerProviders locale={locale}>
           <ClientProviders>
+            <Navbar />
             {children}
             <TailwindIndicator />
             <Toaster />
