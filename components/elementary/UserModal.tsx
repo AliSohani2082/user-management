@@ -27,22 +27,8 @@ import {
   useCreateUserMutation,
   useUpdateUserMutation,
 } from "@/store/api/usersApi";
+import { useTranslations } from "next-intl";
 import type { User as UserType } from "@/types/user";
-
-const userSchema = z.object({
-  name: z
-    .string()
-    .min(1, "نام کامل الزامی است")
-    .min(2, "نام باید حداقل ۲ کاراکتر باشد")
-    .max(100, "نام نباید بیش از ۱۰۰ کاراکتر باشد"),
-  job: z
-    .string()
-    .min(1, "شغل الزامی است")
-    .min(2, "شغل باید حداقل ۲ کاراکتر باشد")
-    .max(50, "شغل نباید بیش از ۵۰ کاراکتر باشد"),
-});
-
-type UserFormData = z.infer<typeof userSchema>;
 
 interface UserModalProps {
   isOpen: boolean;
@@ -60,6 +46,22 @@ export default function UserModal({
   onSuccess,
 }: UserModalProps) {
   const { toast } = useToast();
+  const t = useTranslations();
+
+  const userSchema = z.object({
+    name: z
+      .string()
+      .min(1, t("forms.required"))
+      .min(2, t("forms.minLength", { min: 2 }))
+      .max(100, t("forms.maxLength", { max: 100 })),
+    job: z
+      .string()
+      .min(1, t("forms.required"))
+      .min(2, t("forms.minLength", { min: 2 }))
+      .max(50, t("forms.maxLength", { max: 50 })),
+  });
+
+  type UserFormData = z.infer<typeof userSchema>;
 
   const form = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
@@ -76,7 +78,7 @@ export default function UserModal({
     if (mode === "edit" && user) {
       form.reset({
         name: `${user.first_name} ${user.last_name}`,
-        job: "کاربر سیستم", // Default job since API doesn't provide this
+        job: t("users.job"), // Default job since API doesn't provide this
       });
     } else {
       form.reset({
@@ -84,31 +86,33 @@ export default function UserModal({
         job: "",
       });
     }
-  }, [mode, user, isOpen, form]);
+  }, [mode, user, isOpen, form, t]);
 
   const onSubmit = async (data: UserFormData) => {
     try {
       if (mode === "create") {
         await createUser(data).unwrap();
         toast({
-          title: "موفقیت",
-          description: "کاربر جدید با موفقیت ایجاد شد",
+          title: t("common.success"),
+          description: t("users.userCreated"),
         });
       } else {
         await updateUser({ id: user!.id, ...data }).unwrap();
         toast({
-          title: "موفقیت",
-          description: "اطلاعات کاربر با موفقیت بروزرسانی شد",
+          title: t("common.success"),
+          description: t("users.userUpdated"),
         });
       }
 
       onSuccess();
     } catch (error: any) {
       toast({
-        title: "خطا",
+        title: t("common.error"),
         description:
           error?.data?.error ||
-          `خطا در ${mode === "create" ? "ایجاد" : "بروزرسانی"} کاربر`,
+          (mode === "create"
+            ? t("users.userCreateError")
+            : t("users.userUpdateError")),
         variant: "destructive",
       });
     }
@@ -124,19 +128,19 @@ export default function UserModal({
             {mode === "create" ? (
               <>
                 <Plus className="w-5 h-5" />
-                ایجاد کاربر جدید
+                {t("modals.createUser")}
               </>
             ) : (
               <>
                 <Edit className="w-5 h-5" />
-                ویرایش کاربر
+                {t("modals.editUser")}
               </>
             )}
           </DialogTitle>
           <DialogDescription>
             {mode === "create"
-              ? "اطلاعات کاربر جدید را وارد کنید"
-              : "اطلاعات کاربر را ویرایش کنید"}
+              ? t("modals.createUserDescription")
+              : t("modals.editUserDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -147,12 +151,9 @@ export default function UserModal({
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>نام کامل</FormLabel>
+                  <FormLabel>{t("users.fullName")}</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="نام و نام خانوادگی را وارد کنید"
-                      {...field}
-                    />
+                    <Input placeholder={t("forms.enterFullName")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -164,9 +165,9 @@ export default function UserModal({
               name="job"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>شغل</FormLabel>
+                  <FormLabel>{t("users.job")}</FormLabel>
                   <FormControl>
-                    <Input placeholder="شغل را وارد کنید" {...field} />
+                    <Input placeholder={t("forms.enterJob")} {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -179,13 +180,13 @@ export default function UserModal({
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     {mode === "create"
-                      ? "در حال ایجاد..."
-                      : "در حال بروزرسانی..."}
+                      ? t("modals.creating")
+                      : t("modals.updating")}
                   </>
                 ) : mode === "create" ? (
-                  "ایجاد کاربر"
+                  t("users.newUser")
                 ) : (
-                  "بروزرسانی"
+                  t("common.update")
                 )}
               </Button>
               <Button
@@ -194,7 +195,7 @@ export default function UserModal({
                 onClick={onClose}
                 disabled={isLoading}
               >
-                انصراف
+                {t("common.cancel")}
               </Button>
             </div>
           </form>

@@ -1,45 +1,55 @@
-"use client"
+"use client";
 
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 
 interface PaginationProps {
-  currentPage: number
-  totalPages: number
-  onPageChange: (page: number) => void
+  currentPage: number;
+  totalPages: number;
+  onPageChange: (page: number) => void;
 }
 
-export default function Pagination({ currentPage, totalPages, onPageChange }: PaginationProps) {
+export default function Pagination({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: PaginationProps) {
+  const t = useTranslations();
   const getVisiblePages = () => {
-    const delta = 2
-    const range = []
-    const rangeWithDots = []
+    const delta = 2;
+    const range = [];
+    const rangeWithDots = [];
 
-    for (let i = Math.max(2, currentPage - delta); i <= Math.min(totalPages - 1, currentPage + delta); i++) {
-      range.push(i)
+    for (
+      let i = Math.max(2, currentPage - delta);
+      i <= Math.min(totalPages - 1, currentPage + delta);
+      i++
+    ) {
+      range.push(i);
     }
 
     if (currentPage - delta > 2) {
-      rangeWithDots.push(1, "...")
+      rangeWithDots.push(1, "...");
     } else {
-      rangeWithDots.push(1)
+      rangeWithDots.push(1);
     }
 
-    rangeWithDots.push(...range)
+    rangeWithDots.push(...range);
 
     if (currentPage + delta < totalPages - 1) {
-      rangeWithDots.push("...", totalPages)
+      rangeWithDots.push("...", totalPages);
     } else {
-      rangeWithDots.push(totalPages)
+      rangeWithDots.push(totalPages);
     }
 
-    return rangeWithDots
-  }
+    return rangeWithDots;
+  };
 
-  if (totalPages <= 1) return null
+  if (totalPages <= 1) return null;
 
   return (
-    <div className="flex items-center justify-center space-x-2 space-x-reverse">
+    <div className="flex items-center justify-center gap-2 space-x-reverse">
       <Button
         variant="outline"
         size="sm"
@@ -47,11 +57,12 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
         disabled={currentPage === 1}
         className="flex items-center gap-1"
       >
-        <ChevronRight className="w-4 h-4" />
-        قبلی
+        <ChevronLeft className="w-4 h-4 rtl:hidden ltr:block" />
+        <ChevronRight className="w-4 h-4 rtl:block ltr:hidden" />
+        {t("common.previous")}
       </Button>
 
-      <div className="flex items-center space-x-1 space-x-reverse">
+      <div className="flex items-center gap-1 space-x-reverse">
         {getVisiblePages().map((page, index) => (
           <Button
             key={index}
@@ -73,9 +84,10 @@ export default function Pagination({ currentPage, totalPages, onPageChange }: Pa
         disabled={currentPage === totalPages}
         className="flex items-center gap-1"
       >
-        بعدی
-        <ChevronLeft className="w-4 h-4" />
+        {t("common.next")}
+        <ChevronLeft className="w-4 h-4 rtl:block ltr:hidden" />
+        <ChevronRight className="w-4 h-4 rtl:hidden ltr:block" />
       </Button>
     </div>
-  )
+  );
 }

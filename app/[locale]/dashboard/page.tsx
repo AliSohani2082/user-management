@@ -267,7 +267,7 @@ function DashboardContent() {
                     className="hover:shadow-lg transition-shadow"
                   >
                     <CardHeader className="pb-3">
-                      <div className="flex items-center space-x-3 space-x-reverse">
+                      <div className="flex items-center gap-3 space-x-reverse">
                         <img
                           src={user.avatar || "/placeholder.svg"}
                           alt={`${user.first_name} ${user.last_name}`}

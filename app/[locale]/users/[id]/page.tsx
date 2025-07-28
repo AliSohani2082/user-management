@@ -1,13 +1,21 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "@/lib/i18n/navigation";
 import { useParams } from "next/navigation";
-import { ArrowLeft, Edit, Trash2, Mail, UserIcon } from "lucide-react";
+import { useRouter } from "@/lib/i18n/navigation";
+import {
+  ArrowLeft,
+  Edit,
+  Trash2,
+  Mail,
+  UserIcon,
+  ArrowRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
+import { useTranslations } from "next-intl";
 import { useGetUserQuery, useDeleteUserMutation } from "@/store/api/usersApi";
 import UserModal from "@/components/elementary/UserModal";
 import DeleteConfirmModal from "@/components/elementary/DeleteConfirmModal";
@@ -18,6 +26,7 @@ export default function UserDetailPage() {
   const params = useParams();
   const router = useRouter();
   const { toast } = useToast();
+  const t = useTranslations();
   const userId = Number.parseInt(params.id as string);
 
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
@@ -39,14 +48,14 @@ export default function UserDetailPage() {
     try {
       await deleteUser(userId).unwrap();
       toast({
-        title: "موفقیت",
-        description: "کاربر با موفقیت حذف شد",
+        title: t("common.success"),
+        description: t("users.userDeleted"),
       });
       router.push("/dashboard");
     } catch (error) {
       toast({
-        title: "خطا",
-        description: "خطا در حذف کاربر",
+        title: t("common.error"),
+        description: t("users.userDeleteError"),
         variant: "destructive",
       });
     }
@@ -54,7 +63,8 @@ export default function UserDetailPage() {
 
   if (isLoading) return <LoadingSpinner />;
   if (error) return <ErrorMessage error={error} onRetry={refetch} />;
-  if (!user) return <ErrorMessage error="کاربر یافت نشد" onRetry={refetch} />;
+  if (!user)
+    return <ErrorMessage error={t("users.noUsers")} onRetry={refetch} />;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -65,20 +75,23 @@ export default function UserDetailPage() {
           onClick={() => router.back()}
           className="flex items-center gap-2"
         >
-          <ArrowLeft className="w-4 h-4" />
-          بازگشت
+          <ArrowLeft className="w-4 h-4 rtl:hidden ltr:block" />
+          <ArrowRight className="w-4 h-4 rtl:block ltr:hidden" />
+          {t("common.back")}
         </Button>
         <div className="flex-1">
-          <h1 className="text-3xl font-bold text-gray-900">جزئیات کاربر</h1>
+          <h1 className="text-3xl font-bold text-gray-900">
+            {t("users.userDetails")}
+          </h1>
         </div>
         <div className="flex gap-2">
           <Button onClick={handleEdit} variant="outline" size="sm">
             <Edit className="w-4 h-4 mr-2" />
-            ویرایش
+            {t("common.edit")}
           </Button>
           <Button onClick={handleDelete} variant="destructive" size="sm">
             <Trash2 className="w-4 h-4 mr-2" />
-            حذف
+            {t("common.delete")}
           </Button>
         </div>
       </div>
@@ -87,7 +100,7 @@ export default function UserDetailPage() {
       <div className="max-w-2xl mx-auto">
         <Card className="overflow-hidden">
           <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
-            <div className="flex items-center space-x-4 space-x-reverse">
+            <div className="flex items-center gap-4">
               <img
                 src={user.data.avatar || "/placeholder.svg"}
                 alt={`${user.data.first_name} ${user.data.last_name}`}
@@ -109,7 +122,9 @@ export default function UserDetailPage() {
                     <UserIcon className="w-5 h-5 text-blue-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">نام</p>
+                    <p className="text-sm text-gray-500">
+                      {t("users.firstName")}
+                    </p>
                     <p className="font-semibold">{user.data.first_name}</p>
                   </div>
                 </div>
@@ -119,7 +134,9 @@ export default function UserDetailPage() {
                     <UserIcon className="w-5 h-5 text-green-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">نام خانوادگی</p>
+                    <p className="text-sm text-gray-500">
+                      {t("users.lastName")}
+                    </p>
                     <p className="font-semibold">{user.data.last_name}</p>
                   </div>
                 </div>
@@ -131,17 +148,17 @@ export default function UserDetailPage() {
                     <Mail className="w-5 h-5 text-purple-600" />
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">ایمیل</p>
+                    <p className="text-sm text-gray-500">{t("users.email")}</p>
                     <p className="font-semibold">{user.data.email}</p>
                   </div>
                 </div>
 
                 <div className="flex items-center gap-3">
                   <div className="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <Badge className="bg-orange-600">ID</Badge>
+                    <Badge className="bg-orange-600">{t("users.id")}</Badge>
                   </div>
                   <div>
-                    <p className="text-sm text-gray-500">شناسه کاربر</p>
+                    <p className="text-sm text-gray-500">{t("users.id")}</p>
                     <p className="font-semibold">{user.data.id}</p>
                   </div>
                 </div>
@@ -152,7 +169,7 @@ export default function UserDetailPage() {
             {user.support && (
               <div className="mt-8 p-4 bg-gray-50 rounded-lg">
                 <h3 className="font-semibold text-gray-900 mb-2">
-                  اطلاعات پشتیبانی
+                  {t("users.support")}
                 </h3>
                 <p className="text-sm text-gray-600 mb-2">
                   {user.support.text}

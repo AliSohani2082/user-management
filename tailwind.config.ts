@@ -106,7 +106,12 @@ module.exports = {
         height: "height",
       },
       fontFamily: {
-        sans: ["var(--font-ir-sans)"],
+        sans: [
+          "var(--font-ir-sans)",
+          "ui-sans-serif",
+          "system-ui",
+          "sans-serif",
+        ],
         mono: ["var(--font-rubik)"],
       },
     },

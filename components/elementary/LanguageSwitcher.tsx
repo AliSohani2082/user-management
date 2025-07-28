@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useLocale } from "next-intl";
 import { useRouter, usePathname } from "@/lib/i18n/navigation";
-import { Globe, Check } from "lucide-react";
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
@@ -35,7 +35,6 @@ export default function LanguageSwitcher() {
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
         <Button variant="ghost" size="sm" className="flex items-center gap-2">
-          <Globe className="w-4 h-4" />
           <span className="hidden sm:inline">{currentLanguage?.flag}</span>
           <span className="hidden md:inline">{currentLanguage?.name}</span>
         </Button>

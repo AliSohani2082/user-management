@@ -8,7 +8,6 @@
     "themeColor": "#4F46E5",
     "metaRobots": "index, follow",
     "email": "creator_email@gmail.com",
-
     "twitter": {
       "card": "summary_large_image",
       "title": "مدیریت کاربران - مدیریت آسان کاربران",
@@ -16,15 +15,15 @@
       "siteId": "@usermanagement",
       "creator": "@usermanagement",
       "creatorId": "usermanagement_creator",
-      "images": ["/og-image.png"]
+      "images": [
+        "/og-image.png"
+      ]
     },
-
     "dashboard": {
       "title": "داشبورد مدیریت کاربران",
       "description": "با استفاده از یک داشبورد امن و کاربردی، کاربران را مشاهده و مدیریت کنید و جزئیات پروفایل آن‌ها را بررسی نمایید.",
       "keywords": "مدیریت کاربران، داشبورد احراز هویت، API ریکرس، لیست کاربران، جزئیات کاربران، سیستم ورود"
     },
-
     "users": {
       "title": "پروفایل و مدیریت کاربران",
       "description": "پروفایل کاربران را مرور و مدیریت کنید، جزئیات آن‌ها را بررسی نمایید و سطوح دسترسی را کنترل کنید.",
@@ -121,7 +120,8 @@
     "userUpdateError": "خطا در بروزرسانی کاربر",
     "userDeleteError": "خطا در حذف کاربر",
     "dataRefreshed": "داده‌ها بروزرسانی شدند",
-    "usersList": "لیست کاربران"
+    "usersList": "لیست کاربران",
+    "support": "پشتیبانی"
   },
   "filters": {
     "searchPlaceholder": "جستجو در نام، نام خانوادگی یا ایمیل...",

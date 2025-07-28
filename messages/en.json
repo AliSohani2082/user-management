@@ -8,7 +8,6 @@
     "themeColor": "#4F46E5",
     "metaRobots": "index, follow",
     "email": "creator_email@gmail.com",
-
     "twitter": {
       "card": "summary_large_image",
       "title": "User Management - Manage Users Seamlessly",
@@ -16,15 +15,15 @@
       "siteId": "@usermanagement",
       "creator": "@usermanagement",
       "creatorId": "usermanagement_creator",
-      "images": ["/og-image.png"]
+      "images": [
+        "/og-image.png"
+      ]
     },
-
     "dashboard": {
       "title": "User Management Dashboard",
       "description": "Access a secure and intuitive dashboard to view, manage, and explore users with authenticated sessions.",
       "keywords": "user management, auth dashboard, reqres API, user listing, user details, login system"
     },
-
     "users": {
       "title": "User Profiles & Management",
       "description": "Browse and manage user profiles, check details, and control access levels through a seamless UI.",
@@ -121,7 +120,8 @@
     "userUpdateError": "Error updating user",
     "userDeleteError": "Error deleting user",
     "dataRefreshed": "Data refreshed",
-    "usersList": "Users List"
+    "usersList": "Users List",
+    "support": "Support"
   },
   "filters": {
     "searchPlaceholder": "Search in name, last name or email...",

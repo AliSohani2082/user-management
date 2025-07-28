@@ -33,7 +33,6 @@ export default async function RootLayout({ children, params }: LayoutProps) {
       lang={locale}
       className={`${fontSans.variable} font-sans`}
       dir={locale === "fa" ? "rtl" : "ltr"}
-      suppressHydrationWarning
     >
       <body>
         <ServerProviders locale={locale}>
