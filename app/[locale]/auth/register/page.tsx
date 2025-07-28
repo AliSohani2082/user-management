@@ -1,7 +1,7 @@
 "use client";
 
 import { useDispatch } from "react-redux";
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/lib/i18n/navigation";
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,18 +27,18 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useRegisterMutation } from "@/store/api/authApi";
 import { login } from "@/store/slices/authSlice";
-import {
-  passwordSchema,
-  registerSchema,
-  type RegisterFormData,
-} from "@/lib/validations/auth";
+import { createAuthSchema, RegisterFormData } from "@/lib/validations/auth";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function RegisterPage() {
+  const t = useTranslations();
   const dispatch = useDispatch();
   const router = useRouter();
   const { toast } = useToast();
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+  const { passwordSchema, registerSchema } = createAuthSchema(t);
 
   const form = useForm<RegisterFormData>({
     resolver: zodResolver(registerSchema),
@@ -66,17 +66,16 @@ export default function RegisterPage() {
           token: result.token,
         })
       );
-
       toast({
-        title: "موفقیت",
-        description: "حساب کاربری با موفقیت ایجاد شد",
+        title: t("common.success"),
+        description: t("auth.registerSuccess"),
       });
 
       router.push("/dashboard");
     } catch (error: any) {
       toast({
-        title: "خطا در ثبت نام",
-        description: error?.data?.error || "خطا در ایجاد حساب کاربری",
+        title: t("auth.registerError"),
+        description: error?.data?.error || t("auth.invalidCredentials"),
         variant: "destructive",
       });
     }
@@ -89,8 +88,8 @@ export default function RegisterPage() {
           <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <UserPlus className="w-8 h-8 text-white" />
           </div>
-          <CardTitle className="text-2xl">ثبت نام</CardTitle>
-          <CardDescription>حساب کاربری جدید ایجاد کنید</CardDescription>
+          <CardTitle className="text-2xl">{t("auth.registerTitle")}</CardTitle>
+          <CardDescription>{t("auth.registerDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -100,13 +99,13 @@ export default function RegisterPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>ایمیل</FormLabel>
+                    <FormLabel>{t("auth.email")}</FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Mail className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
                         <Input
                           type="email"
-                          placeholder="ایمیل خود را وارد کنید"
+                          placeholder={t("forms.enterEmail")}
                           className="pr-10"
                           {...field}
                         />
@@ -122,7 +121,7 @@ export default function RegisterPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>رمز عبور</FormLabel>
+                    <FormLabel>{t("auth.password")}</FormLabel>
                     <FormControl>
                       <PasswordInput
                         schema={passwordSchema}
@@ -140,13 +139,13 @@ export default function RegisterPage() {
                 name="confirmPassword"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>تکرار رمز عبور</FormLabel>
+                    <FormLabel>{t("auth.confirmPassword")}</FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Lock className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
                         <Input
                           type={showConfirmPassword ? "text" : "password"}
-                          placeholder="رمز عبور را مجدداً وارد کنید"
+                          placeholder={t("forms.confirmPasswordPlaceholder")}
                           className="pr-10 pl-10"
                           {...field}
                         />
@@ -176,21 +175,21 @@ export default function RegisterPage() {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    در حال ثبت نام...
+                    {t("auth.registering")}
                   </>
                 ) : (
-                  "ثبت نام"
+                  t("auth.registerButton")
                 )}
               </Button>
 
               <div className="text-center">
                 <p className="text-sm text-gray-600">
-                  قبلاً حساب کاربری دارید؟{" "}
+                  t("auth.hasAccount"){" "}
                   <Link
                     href="/auth/login"
                     className="text-blue-600 hover:text-blue-800 font-medium"
                   >
-                    وارد شوید
+                    {t("auth.loginLink")}
                   </Link>
                 </p>
               </div>

@@ -6,6 +6,9 @@ import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./lib/i18n");
 const nextConfig = {
+  pageExtensions: ["ts", "tsx", "js", "jsx", "md", "mdx"],
+  output: "standalone",
+  reactStrictMode: true,
   experimental: {
     // Enable experimental features if needed
   },

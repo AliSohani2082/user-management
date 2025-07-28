@@ -1,30 +1,45 @@
 import { z } from "zod";
 
-export const loginSchema = z.object({
-  email: z.string().min(1, "ایمیل الزامی است").email("فرمت ایمیل صحیح نیست"),
-  password: z
-    .string()
-    .min(1, "رمز عبور الزامی است")
-    .min(6, "رمز عبور باید حداقل ۶ کاراکتر باشد")
-    .max(100, "رمز عبور نباید بیش از ۱۰۰ کاراکتر باشد"),
-});
-
-export const passwordSchema = z
-  .string()
-  .regex(/^.{5,20}$/, "تعداد حروف بین ۵ تا ۲۰ کاراکتر باشد")
-  .regex(/[a-z]/, "حداقل یک حرف کوچک داشته باشد")
-  .regex(/[A-Z]/, "حداقل یک حرف بزرگ داشته باشد");
-
-export const registerSchema = z
-  .object({
-    email: z.string().min(1, "ایمیل الزامی است").email("فرمت ایمیل صحیح نیست"),
-    password: passwordSchema,
-    confirmPassword: z.string().min(1, "تکرار رمز عبور الزامی است"),
-  })
-  .refine((data) => data.password === data.confirmPassword, {
-    message: "رمز عبور و تکرار آن باید یکسان باشند",
-    path: ["confirmPassword"],
+export const createAuthSchema = (t: (key: string, values?: any) => string) => {
+  const loginSchema = z.object({
+    email: z
+      .string()
+      .min(1, t("forms.required"))
+      .email(t("forms.invalidEmail")),
+    password: z
+      .string()
+      .min(1, t("forms.required"))
+      .min(6, t("forms.minLength", { min: 6 }))
+      .max(100, t("forms.maxLength", { max: 100 })),
   });
 
-export type LoginFormData = z.infer<typeof loginSchema>;
-export type RegisterFormData = z.infer<typeof registerSchema>;
+  const passwordSchema = z
+    .string()
+    .regex(/^.{5,20}$/, t("forms.passwordRequirements.minMax"))
+    .regex(/[a-z]/, t("forms.passwordRequirements.lowercase"));
+  // .regex(/[A-Z]/, t("forms.passwordRequirements.uppercase"));
+  const registerSchema = z
+    .object({
+      email: z
+        .string()
+        .min(1, t("forms.required"))
+        .email(t("forms.invalidEmail")),
+      password: passwordSchema,
+      confirmPassword: z.string().min(1, t("forms.required")),
+    })
+    .refine((data) => data.password === data.confirmPassword, {
+      message: t("forms.passwordMismatch"),
+      path: ["confirmPassword"],
+    });
+  return { loginSchema, passwordSchema, registerSchema };
+};
+
+export type LoginFormData = z.infer<
+  ReturnType<typeof createAuthSchema>["loginSchema"]
+>;
+export type RegisterFormData = z.infer<
+  ReturnType<typeof createAuthSchema>["registerSchema"]
+>;
+export type PasswordSchema = ReturnType<
+  typeof createAuthSchema
+>["passwordSchema"];

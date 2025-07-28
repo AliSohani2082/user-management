@@ -13,7 +13,8 @@ const intlMiddleware = createMiddleware({
 const publicPages = [
   "/",
   "/auth",
-  "/auth/.*",
+  "/auth/login",
+  "/auth/register",
   "/dashboard",
   "/users",
   "/users/.*",

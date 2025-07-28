@@ -26,14 +26,18 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { useLoginMutation } from "@/store/api/authApi";
 import { login } from "@/store/slices/authSlice";
-import { loginSchema, type LoginFormData } from "@/lib/validations/auth";
+import { createAuthSchema, type LoginFormData } from "@/lib/validations/auth";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 export default function LoginPage() {
+  const t = useTranslations();
   const dispatch = useDispatch();
   const router = useRouter();
   const { toast } = useToast();
   const [showPassword, setShowPassword] = useState(false);
+
+  const { loginSchema } = createAuthSchema(t);
 
   const form = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
@@ -59,15 +63,15 @@ export default function LoginPage() {
       );
 
       toast({
-        title: "موفقیت",
-        description: "با موفقیت وارد شدید",
+        title: t("common.success"),
+        description: t("auth.loginSuccess"),
       });
 
       router.push("/dashboard");
     } catch (error: any) {
       toast({
-        title: "خطا در ورود",
-        description: error?.data?.error || "اطلاعات ورود اشتباه است",
+        title: t("auth.loginError"),
+        description: error?.data?.error || t("auth.invalidCredentials"),
         variant: "destructive",
       });
     }
@@ -80,8 +84,8 @@ export default function LoginPage() {
           <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
             <LogIn className="w-8 h-8 text-white" />
           </div>
-          <CardTitle className="text-2xl">ورود به سیستم</CardTitle>
-          <CardDescription>برای دسترسی به پنل مدیریت وارد شوید</CardDescription>
+          <CardTitle className="text-2xl">{t("auth.loginTitle")}</CardTitle>
+          <CardDescription>{t("auth.loginDescription")}</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
@@ -91,13 +95,13 @@ export default function LoginPage() {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>ایمیل</FormLabel>
+                    <FormLabel>{t("auth.email")}</FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Mail className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
                         <Input
                           type="email"
-                          placeholder="ایمیل خود را وارد کنید"
+                          placeholder={t("forms.enterEmail")}
                           className="pr-10"
                           {...field}
                         />
@@ -113,7 +117,7 @@ export default function LoginPage() {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>رمز عبور</FormLabel>
+                    <FormLabel>{t("auth.password")}</FormLabel>
                     <FormControl>
                       <div className="relative">
                         <Lock className="absolute right-3 top-3 h-4 w-4 text-gray-400" />
@@ -146,21 +150,21 @@ export default function LoginPage() {
                 {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    در حال ورود...
+                    {t("auth.loggingIn")}
                   </>
                 ) : (
-                  "ورود"
+                  t("auth.loginButton")
                 )}
               </Button>
 
               <div className="text-center">
                 <p className="text-sm text-gray-600">
-                  حساب کاربری ندارید؟{" "}
+                  {t("auth.noAccount")}{" "}
                   <Link
                     href="/auth/register"
                     className="text-blue-600 hover:text-blue-800 font-medium"
                   >
-                    ثبت نام کنید
+                    {t("auth.registerLink")}
                   </Link>
                 </p>
               </div>

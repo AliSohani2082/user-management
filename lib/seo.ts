@@ -3,7 +3,7 @@ import { env } from "@/env.mjs";
 import { getTranslations } from "next-intl/server";
 
 type SeoProps = {
-  params: { locale: string };
+  locale: string;
   pageName?:
     | "dashboard"
     | "blog"
@@ -13,17 +13,13 @@ type SeoProps = {
     | "contact";
 };
 
-export async function Seo({ params, pageName = "dashboard" }: SeoProps) {
+export async function Seo({ locale, pageName = "dashboard" }: SeoProps) {
   const t = await getTranslations();
 
-  return generateMetadata(t, params, pageName);
+  return generateMetadata(t, locale, pageName);
 }
 
-function generateMetadata(
-  t: any,
-  params: { locale: string },
-  pageName: string
-): Metadata {
+function generateMetadata(t: any, locale: string, pageName: string): Metadata {
   // Page-specific titles and descriptions
   const pageKeywords: Record<string, string> = {
     dashboard: t("metadata.dashboard.keywords"),
@@ -56,10 +52,10 @@ function generateMetadata(
       title: pageTitles[pageName] || t("metadata.title"),
       description: pageDescriptions[pageName] || t("metadata.description"),
       images: t("metadata.ogImage"),
-      locale: params.locale,
+      locale: locale,
       type: "website",
       siteName: t("metadata.siteName"),
-      url: `${env.NEXT_PUBLIC_URL}/${params.locale}${pageName === "dashboard" ? "" : `/${pageName}`}`,
+      url: `${env.NEXT_PUBLIC_URL}/${locale}${pageName === "dashboard" ? "" : `/${pageName}`}`,
     },
     twitter: {
       card: "summary_large_image",

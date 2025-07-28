@@ -1,14 +1,15 @@
 "use client";
 
 import { useSelector, useDispatch } from "react-redux";
-import { useRouter, usePathname } from "@/lib/i18n/navigation";
+import { Link, useRouter, usePathname } from "@/lib/i18n/navigation";
 import { Users, LogOut, BarChart3 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useTranslations } from "next-intl";
 import type { RootState } from "@/store/store";
 import { logout } from "@/store/slices/authSlice";
 import { useLogoutMutation } from "@/store/api/authApi";
 import { useToast } from "@/hooks/use-toast";
-import Link from "next/link";
+import LanguageSwitcher from "./LanguageSwitcher";
 
 export default function Navbar() {
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ export default function Navbar() {
     (state: RootState) => state.auth
   );
   const [logoutMutation] = useLogoutMutation();
+  const t = useTranslations();
 
   const handleLogout = async () => {
     try {
@@ -28,8 +30,8 @@ export default function Navbar() {
     } finally {
       dispatch(logout());
       toast({
-        title: "خروج موفق",
-        description: "با موفقیت از سیستم خارج شدید",
+        title: t("auth.logoutSuccess"),
+        description: t("auth.logoutSuccess"),
       });
       router.push("/auth/login");
     }
@@ -56,7 +58,7 @@ export default function Navbar() {
             >
               <Users className="w-8 h-8 text-blue-600" />
               <span className="text-xl font-bold text-gray-900">
-                پنل مدیریت کاربران
+                {t("navigation.userManagement")}
               </span>
             </Link>
           </div>
@@ -72,7 +74,7 @@ export default function Navbar() {
               }`}
             >
               <BarChart3 className="w-4 h-4" />
-              <span>داشبورد</span>
+              <span>{t("navigation.dashboard")}</span>
             </Link>
 
             <Link
@@ -84,15 +86,18 @@ export default function Navbar() {
               }`}
             >
               <Users className="w-4 h-4" />
-              <span>کاربران</span>
+              <span>{t("navigation.users")}</span>
             </Link>
           </div>
 
           {/* Auth Section */}
           <div className="flex items-center space-x-4 space-x-reverse">
+            <LanguageSwitcher />
             <div className="flex items-center space-x-3 space-x-reverse">
               <span className="text-sm text-gray-600">
-                خوش آمدید، {user?.username || user?.email}
+                {t("auth.welcome", {
+                  name: user?.username || user?.email || "",
+                })}
               </span>
               <Button
                 onClick={handleLogout}
@@ -101,7 +106,7 @@ export default function Navbar() {
                 className="flex items-center space-x-2 space-x-reverse bg-transparent"
               >
                 <LogOut className="w-4 h-4" />
-                <span>خروج</span>
+                <span>{t("navigation.logout")}</span>
               </Button>
             </div>
           </div>

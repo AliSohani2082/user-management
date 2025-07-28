@@ -17,23 +17,25 @@ export async function generateMetadata({
 }: {
   params: { locale: string };
 }) {
-  return Seo({ params });
+  const { locale } = await params;
+  return Seo({ locale });
 }
 
 export default async function RootLayout({ children, params }: LayoutProps) {
-  if (!locales.includes(params.locale)) {
+  const { locale } = await params;
+  if (!locales.includes(locale)) {
     notFound();
   }
 
   return (
     <html
-      lang={params.locale}
+      lang={locale}
       className={`${fontSans.variable} font-sans`}
-      dir={params.locale === "fa" ? "rtl" : "ltr"}
+      dir={locale === "fa" ? "rtl" : "ltr"}
       suppressHydrationWarning
     >
       <body>
-        <ServerProviders locale={params.locale}>
+        <ServerProviders locale={locale}>
           <ClientProviders>
             {children}
             <TailwindIndicator />

@@ -15,7 +15,7 @@ export default function AuthGuard({ children }: AuthGuardProps) {
   const router = useRouter();
   const pathname = usePathname();
   const { isAuthenticated } = useSelector((state: RootState) => state.auth);
-
+  console.log(isAuthenticated ? "authenticated" : "not authenticated");
   const isAuthPage = pathname.startsWith("/auth");
 
   useEffect(() => {
