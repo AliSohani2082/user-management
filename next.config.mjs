@@ -1,6 +1,10 @@
 import "./env.mjs";
 
 /** @type {import('next').NextConfig} */
+
+import createNextIntlPlugin from "next-intl/plugin";
+
+const withNextIntl = createNextIntlPlugin("./lib/i18n");
 const nextConfig = {
   experimental: {
     // Enable experimental features if needed
@@ -20,4 +24,4 @@ const nextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

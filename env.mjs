@@ -6,7 +6,11 @@ export const env = createEnv({
    * Specify your server-side environment variables schema here. This way you can ensure the app
    * isn't built with invalid env vars.
    */
-  server: {},
+  server: {
+    NODE_ENV: z
+      .enum(["development", "test", "production"])
+      .default("development"),
+  },
 
   /**
    * Specify your client-side environment variables schema here. This way you can ensure the app
@@ -14,8 +18,9 @@ export const env = createEnv({
    * `NEXT_PUBLIC_`.
    */
   client: {
-    NEXT_PUBLIC_API_BASE_URL: z.string().url().default("https://reqres.in/api"),
-    NEXT_PUBLIC_API_KEY: z.string().default("reqres-free-v1"),
+    NEXT_PUBLIC_URL: z.string().url(),
+    NEXT_PUBLIC_API_BASE_URL: z.string().url(), // There were a env variable leak here and it is in previous commits.... it is a dumb mistake... anyway
+    NEXT_PUBLIC_API_KEY: z.string(),
   },
 
   /**
@@ -23,6 +28,7 @@ export const env = createEnv({
    * middlewares) or client-side so we need to destruct manually.
    */
   runtimeEnv: {
+    NEXT_PUBLIC_URL: process.env.NEXT_PUBLIC_URL,
     NEXT_PUBLIC_API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL,
     NEXT_PUBLIC_API_KEY: process.env.NEXT_PUBLIC_API_KEY,
   },

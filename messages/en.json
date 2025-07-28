@@ -1,0 +1,35 @@
+{
+  "metadata": {
+    "siteName": "User Management",
+    "title": "User Management - User Management platform",
+    "description": "Manage users efficiently with full authentication using the reqres.in API. View users, explore profiles, and handle access securely.",
+    "logo": "/logo.png",
+    "ogImage": "/og-image.png",
+    "themeColor": "#4F46E5",
+    "metaRobots": "index, follow",
+    "email": "creator_email@gmail.com",
+
+    "twitter": {
+      "card": "summary_large_image",
+      "title": "User Management - Manage Users Seamlessly",
+      "description": "Full-featured user management dashboard with authentication and detailed user insights, powered by the reqres.in API.",
+      "siteId": "@usermanagement",
+      "creator": "@usermanagement",
+      "creatorId": "usermanagement_creator",
+      "images": ["/og-image.png"]
+    },
+
+    "dashboard": {
+      "title": "User Management Dashboard",
+      "description": "Access a secure and intuitive dashboard to view, manage, and explore users with authenticated sessions.",
+      "keywords": "user management, auth dashboard, reqres API, user listing, user details, login system"
+    },
+
+    "users": {
+      "title": "User Profiles & Management",
+      "description": "Browse and manage user profiles, check details, and control access levels through a seamless UI.",
+      "keywords": "user profiles, user details, authentication, reqres users, user dashboard"
+    }
+  },
+  "HomePage": {}
+}

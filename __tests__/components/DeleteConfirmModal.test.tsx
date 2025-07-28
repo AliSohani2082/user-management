@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from "@testing-library/react";
-import DeleteConfirmModal from "@/components/DeleteConfirmModal";
+import DeleteConfirmModal from "@/components/elementary/DeleteConfirmModal";
 
 describe("DeleteConfirmModal", () => {
   const defaultProps = {

@@ -1,17 +1,18 @@
 "use client";
 
 import { useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "@/lib/i18n/navigation";
+import { useParams } from "next/navigation";
 import { ArrowLeft, Edit, Trash2, Mail, UserIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { useGetUserQuery, useDeleteUserMutation } from "@/store/api/usersApi";
-import UserModal from "@/components/UserModal";
-import DeleteConfirmModal from "@/components/DeleteConfirmModal";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import ErrorMessage from "@/components/ErrorMessage";
+import UserModal from "@/components/elementary/UserModal";
+import DeleteConfirmModal from "@/components/elementary/DeleteConfirmModal";
+import LoadingSpinner from "@/components/elementary/LoadingSpinner";
+import ErrorMessage from "@/components/elementary/ErrorMessage";
 
 export default function UserDetailPage() {
   const params = useParams();

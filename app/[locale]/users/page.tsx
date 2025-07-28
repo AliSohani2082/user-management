@@ -10,11 +10,11 @@ import { useToast } from "@/hooks/use-toast";
 import type { RootState } from "@/store/store";
 import { useGetUsersQuery, useDeleteUserMutation } from "@/store/api/usersApi";
 import { setCurrentPage } from "@/store/slices/usersSlice";
-import UserModal from "@/components/UserModal";
-import DeleteConfirmModal from "@/components/DeleteConfirmModal";
-import Pagination from "@/components/Pagination";
-import LoadingSpinner from "@/components/LoadingSpinner";
-import ErrorMessage from "@/components/ErrorMessage";
+import UserModal from "@/components/elementary/UserModal";
+import DeleteConfirmModal from "@/components/elementary/DeleteConfirmModal";
+import Pagination from "@/components/elementary/Pagination";
+import LoadingSpinner from "@/components/elementary/LoadingSpinner";
+import ErrorMessage from "@/components/elementary/ErrorMessage";
 import type { User } from "@/types/user";
 import Link from "next/link";
 
