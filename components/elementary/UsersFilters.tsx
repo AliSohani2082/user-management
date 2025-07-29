@@ -1,36 +1,38 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Search, Filter, X, SortAsc, SortDesc, RotateCcw } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { useState } from "react"
+import { Filter, RotateCcw, Search, SortAsc, SortDesc, X } from "lucide-react"
+import { useTranslations } from "next-intl"
+
+import type { User } from "@/types/user"
+
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { Badge } from "@/components/ui/badge";
-import { useTranslations } from "next-intl";
-import type { User } from "@/types/user";
+} from "@/components/ui/select"
 
 interface UsersFiltersProps {
-  users: User[];
+  users: User[]
   filters: {
-    search: string;
-    domain: string;
-    sortBy: string;
-    sortOrder: string;
-  };
-  onFilterChange: (key: string, value: string | null) => void;
-  onResetFilters: () => void;
+    search: string
+    domain: string
+    sortBy: string
+    sortOrder: string
+  }
+  onFilterChange: (key: string, value: string | null) => void
+  onResetFilters: () => void
 }
 
 export default function UsersFilters({
@@ -39,57 +41,57 @@ export default function UsersFilters({
   onFilterChange,
   onResetFilters,
 }: UsersFiltersProps) {
-  const [isFilterOpen, setIsFilterOpen] = useState(false);
-  const t = useTranslations();
+  const [isFilterOpen, setIsFilterOpen] = useState(false)
+  const t = useTranslations()
 
   // Extract unique domains from users
   const domains = Array.from(
     new Set(users.map((user) => user.email.split("@")[1]))
-  ).sort();
+  ).sort()
 
   const activeFiltersCount = [
     filters.search,
     filters.domain,
     filters.sortBy !== "id" ? filters.sortBy : null,
     filters.sortOrder !== "asc" ? filters.sortOrder : null,
-  ].filter(Boolean).length;
+  ].filter(Boolean).length
 
   const handleSearchChange = (value: string) => {
-    onFilterChange("search", value || null);
-  };
+    onFilterChange("search", value || null)
+  }
 
   const handleDomainChange = (value: string) => {
-    onFilterChange("domain", value === "all" ? null : value);
-  };
+    onFilterChange("domain", value === "all" ? null : value)
+  }
 
   const handleSortChange = (value: string) => {
-    onFilterChange("sortBy", value);
-  };
+    onFilterChange("sortBy", value)
+  }
 
   const handleSortOrderChange = (value: string) => {
-    onFilterChange("sortOrder", value);
-  };
+    onFilterChange("sortOrder", value)
+  }
 
   const getSortFieldLabel = (field: string) => {
     switch (field) {
       case "id":
-        return t("users.id");
+        return t("users.id")
       case "first_name":
-        return t("users.firstName");
+        return t("users.firstName")
       case "last_name":
-        return t("users.lastName");
+        return t("users.lastName")
       case "email":
-        return t("users.email");
+        return t("users.email")
       default:
-        return field;
+        return field
     }
-  };
+  }
 
   return (
-    <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center">
+    <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
       {/* Search Input */}
-      <div className="relative flex-1 min-w-0">
-        <Search className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+      <div className="relative min-w-0 flex-1">
+        <Search className="absolute right-3 top-1/2 size-4 -translate-y-1/2 text-gray-400" />
         <Input
           placeholder={t("filters.searchPlaceholder")}
           value={filters.search}
@@ -100,10 +102,10 @@ export default function UsersFilters({
           <Button
             variant="ghost"
             size="sm"
-            className="absolute left-1 top-1/2 transform -translate-y-1/2 h-6 w-6 p-0"
+            className="absolute left-1 top-1/2 size-6 -translate-y-1/2 p-0"
             onClick={() => handleSearchChange("")}
           >
-            <X className="w-3 h-3" />
+            <X className="size-3" />
           </Button>
         )}
       </div>
@@ -112,7 +114,7 @@ export default function UsersFilters({
       <Popover open={isFilterOpen} onOpenChange={setIsFilterOpen}>
         <PopoverTrigger asChild>
           <Button variant="outline" className="relative bg-transparent">
-            <Filter className="w-4 h-4 mr-2" />
+            <Filter className="mr-2 size-4" />
             {t("common.filter")}
           </Button>
         </PopoverTrigger>
@@ -124,12 +126,12 @@ export default function UsersFilters({
                 variant="ghost"
                 size="sm"
                 onClick={() => {
-                  onResetFilters();
-                  setIsFilterOpen(false);
+                  onResetFilters()
+                  setIsFilterOpen(false)
                 }}
                 className="h-8 px-2"
               >
-                <RotateCcw className="w-3 h-3 mr-1" />
+                <RotateCcw className="mr-1 size-3" />
                 {t("common.reset")}
               </Button>
             </div>
@@ -188,13 +190,13 @@ export default function UsersFilters({
                 <SelectContent>
                   <SelectItem value="asc">
                     <div className="flex items-center">
-                      <SortAsc className="w-4 h-4 mr-2" />
+                      <SortAsc className="mr-2 size-4" />
                       {t("filters.ascending")}
                     </div>
                   </SelectItem>
                   <SelectItem value="desc">
                     <div className="flex items-center">
-                      <SortDesc className="w-4 h-4 mr-2" />
+                      <SortDesc className="mr-2 size-4" />
                       {t("filters.descending")}
                     </div>
                   </SelectItem>
@@ -205,5 +207,5 @@ export default function UsersFilters({
         </PopoverContent>
       </Popover>
     </div>
-  );
+  )
 }

@@ -1,18 +1,19 @@
-"use client";
+"use client"
 
-import React from "react";
-import { ThemeProvider } from "next-themes";
-import { Provider } from "react-redux";
-import { NuqsAdapter } from "nuqs/adapters/next/app";
-import { TooltipProvider } from "../ui/tooltip";
-import AuthGuard from "../elementary/AuthGuard";
-import { PersistGate } from "redux-persist/integration/react";
-import { store, persister } from "@/store/store";
+import React from "react"
+import { persister, store } from "@/store/store"
+import { ThemeProvider } from "next-themes"
+import { NuqsAdapter } from "nuqs/adapters/next/app"
+import { Provider } from "react-redux"
+import { PersistGate } from "redux-persist/integration/react"
+
+import AuthGuard from "../elementary/AuthGuard"
+import { TooltipProvider } from "../ui/tooltip"
 
 export function ClientProviders({
   children,
 }: {
-  readonly children: React.ReactNode;
+  readonly children: React.ReactNode
 }) {
   return (
     <NuqsAdapter>
@@ -31,5 +32,5 @@ export function ClientProviders({
         </PersistGate>
       </Provider>
     </NuqsAdapter>
-  );
+  )
 }

@@ -1,10 +1,10 @@
-import { Pathnames } from "next-intl/routing";
-import { getRequestConfig } from "next-intl/server";
+import { Pathnames } from "next-intl/routing"
+import { getRequestConfig } from "next-intl/server"
 
-import { routing } from "./navigation";
+import { routing } from "./navigation"
 
-export const locales = ["en", "fa"] as const;
-export const defaultLocale = "fa";
+export const locales = ["en", "fa"] as const
+export const defaultLocale = "fa"
 
 export const pathnames: Pathnames<typeof locales> = {
   "/": "/",
@@ -12,14 +12,14 @@ export const pathnames: Pathnames<typeof locales> = {
     en: "/pathnames",
     fa: "/masir",
   },
-};
+}
 export default getRequestConfig(async ({ requestLocale }) => {
   // This typically corresponds to the `[locale]` segment
-  let locale = await requestLocale;
+  let locale = await requestLocale
 
   // Ensure that a valid locale is used
   if (!locale || !routing.locales.includes(locale as any)) {
-    locale = routing.defaultLocale;
+    locale = routing.defaultLocale
   }
 
   return {
@@ -31,5 +31,5 @@ export default getRequestConfig(async ({ requestLocale }) => {
         : import(`../../messages/${locale}.json`))
     ).default,
     timeZone: "Europe/Prague",
-  };
-});
+  }
+})

@@ -131,4 +131,4 @@ module.exports = {
       variants: ["lg", "md", "sm"],
     },
   ],
-};
+}

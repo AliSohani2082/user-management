@@ -1,19 +1,27 @@
-"use client";
+"use client"
 
-import { useEffect } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-import { Plus, Edit, Loader2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { useEffect } from "react"
+import {
+  useCreateUserMutation,
+  useUpdateUserMutation,
+} from "@/store/api/usersApi"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Edit, Loader2, Plus } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
+
+import type { User as UserType } from "@/types/user"
+
+import { useToast } from "@/hooks/use-toast"
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "@/components/ui/dialog"
 import {
   Form,
   FormControl,
@@ -21,21 +29,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { useToast } from "@/hooks/use-toast";
-import {
-  useCreateUserMutation,
-  useUpdateUserMutation,
-} from "@/store/api/usersApi";
-import { useTranslations } from "next-intl";
-import type { User as UserType } from "@/types/user";
+} from "@/components/ui/form"
+import { Input } from "@/components/ui/input"
 
 interface UserModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  user?: UserType | null;
-  mode: "create" | "edit";
-  onSuccess: () => void;
+  isOpen: boolean
+  onClose: () => void
+  user?: UserType | null
+  mode: "create" | "edit"
+  onSuccess: () => void
 }
 
 export default function UserModal({
@@ -45,8 +47,8 @@ export default function UserModal({
   mode,
   onSuccess,
 }: UserModalProps) {
-  const { toast } = useToast();
-  const t = useTranslations();
+  const { toast } = useToast()
+  const t = useTranslations()
 
   const userSchema = z.object({
     name: z
@@ -59,9 +61,9 @@ export default function UserModal({
       .min(1, t("forms.required"))
       .min(2, t("forms.minLength", { min: 2 }))
       .max(50, t("forms.maxLength", { max: 50 })),
-  });
+  })
 
-  type UserFormData = z.infer<typeof userSchema>;
+  type UserFormData = z.infer<typeof userSchema>
 
   const form = useForm<UserFormData>({
     resolver: zodResolver(userSchema),
@@ -69,42 +71,42 @@ export default function UserModal({
       name: "",
       job: "",
     },
-  });
+  })
 
-  const [createUser, { isLoading: isCreating }] = useCreateUserMutation();
-  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation();
+  const [createUser, { isLoading: isCreating }] = useCreateUserMutation()
+  const [updateUser, { isLoading: isUpdating }] = useUpdateUserMutation()
 
   useEffect(() => {
     if (mode === "edit" && user) {
       form.reset({
         name: `${user.first_name} ${user.last_name}`,
         job: t("users.job"), // Default job since API doesn't provide this
-      });
+      })
     } else {
       form.reset({
         name: "",
         job: "",
-      });
+      })
     }
-  }, [mode, user, isOpen, form, t]);
+  }, [mode, user, isOpen, form, t])
 
   const onSubmit = async (data: UserFormData) => {
     try {
       if (mode === "create") {
-        await createUser(data).unwrap();
+        await createUser(data).unwrap()
         toast({
           title: t("common.success"),
           description: t("users.userCreated"),
-        });
+        })
       } else {
-        await updateUser({ id: user!.id, ...data }).unwrap();
+        await updateUser({ id: user!.id, ...data }).unwrap()
         toast({
           title: t("common.success"),
           description: t("users.userUpdated"),
-        });
+        })
       }
 
-      onSuccess();
+      onSuccess()
     } catch (error: any) {
       toast({
         title: t("common.error"),
@@ -114,11 +116,11 @@ export default function UserModal({
             ? t("users.userCreateError")
             : t("users.userUpdateError")),
         variant: "destructive",
-      });
+      })
     }
-  };
+  }
 
-  const isLoading = isCreating || isUpdating;
+  const isLoading = isCreating || isUpdating
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -127,12 +129,12 @@ export default function UserModal({
           <DialogTitle className="flex items-center gap-2">
             {mode === "create" ? (
               <>
-                <Plus className="w-5 h-5" />
+                <Plus className="size-5" />
                 {t("modals.createUser")}
               </>
             ) : (
               <>
-                <Edit className="w-5 h-5" />
+                <Edit className="size-5" />
                 {t("modals.editUser")}
               </>
             )}
@@ -178,7 +180,7 @@ export default function UserModal({
               <Button type="submit" disabled={isLoading} className="flex-1">
                 {isLoading ? (
                   <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="mr-2 size-4 animate-spin" />
                     {mode === "create"
                       ? t("modals.creating")
                       : t("modals.updating")}
@@ -202,5 +204,5 @@ export default function UserModal({
         </Form>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

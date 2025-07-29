@@ -1,10 +1,16 @@
-"use client";
+"use client"
 
-import { useState } from "react";
-import { Edit, Trash2, Eye, ChevronUp, ChevronDown } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useState } from "react"
+import { ChevronDown, ChevronUp, Edit, Eye, Trash2 } from "lucide-react"
+import { useTranslations } from "next-intl"
+
+import type { User } from "@/types/user"
+
+import { Link } from "@/lib/i18n/navigation"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Checkbox } from "@/components/ui/checkbox"
 import {
   Table,
   TableBody,
@@ -12,19 +18,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useTranslations } from "next-intl";
-import { Link } from "@/lib/i18n/navigation";
-import type { User } from "@/types/user";
+} from "@/components/ui/table"
 
 interface UsersTableViewProps {
-  users: User[];
-  onEditUser: (user: User) => void;
-  onDeleteUser: (user: User) => void;
-  sortBy: string;
-  sortOrder: string;
-  onSort: (field: string) => void;
+  users: User[]
+  onEditUser: (user: User) => void
+  onDeleteUser: (user: User) => void
+  sortBy: string
+  sortOrder: string
+  onSort: (field: string) => void
 }
 
 export default function UsersTableView({
@@ -35,47 +37,47 @@ export default function UsersTableView({
   sortOrder,
   onSort,
 }: UsersTableViewProps) {
-  const [selectedUsers, setSelectedUsers] = useState<number[]>([]);
-  const t = useTranslations();
+  const [selectedUsers, setSelectedUsers] = useState<number[]>([])
+  const t = useTranslations()
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedUsers(users.map((user) => user.id));
+      setSelectedUsers(users.map((user) => user.id))
     } else {
-      setSelectedUsers([]);
+      setSelectedUsers([])
     }
-  };
+  }
 
   const handleSelectUser = (userId: number, checked: boolean) => {
     if (checked) {
-      setSelectedUsers((prev) => [...prev, userId]);
+      setSelectedUsers((prev) => [...prev, userId])
     } else {
-      setSelectedUsers((prev) => prev.filter((id) => id !== userId));
+      setSelectedUsers((prev) => prev.filter((id) => id !== userId))
     }
-  };
+  }
 
   const getSortIcon = (field: string) => {
-    if (sortBy !== field) return null;
+    if (sortBy !== field) return null
     return sortOrder === "asc" ? (
-      <ChevronUp className="w-4 h-4" />
+      <ChevronUp className="size-4" />
     ) : (
-      <ChevronDown className="w-4 h-4" />
-    );
-  };
+      <ChevronDown className="size-4" />
+    )
+  }
 
   const handleSort = (field: string) => {
-    onSort(field);
-  };
+    onSort(field)
+  }
 
   const getInitials = (firstName: string, lastName: string) => {
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase();
-  };
+    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
+  }
 
   return (
     <div className="space-y-4">
       {/* Bulk Actions */}
       {selectedUsers.length > 0 && (
-        <div className="flex items-center gap-4 p-4 bg-blue-50 rounded-lg">
+        <div className="flex items-center gap-4 rounded-lg bg-blue-50 p-4">
           <span className="text-sm font-medium">
             {t("filters.selectedUsers", { count: selectedUsers.length })}
           </span>
@@ -96,7 +98,7 @@ export default function UsersTableView({
       )}
 
       {/* Table */}
-      <div className="border rounded-lg overflow-hidden">
+      <div className="overflow-hidden rounded-lg border">
         <Table>
           <TableHeader>
             <TableRow>
@@ -160,7 +162,7 @@ export default function UsersTableView({
               <TableRow>
                 <TableCell
                   colSpan={8}
-                  className="text-center py-8 text-gray-500"
+                  className="py-8 text-center text-gray-500"
                 >
                   {t("users.noUsers")}
                 </TableCell>
@@ -182,7 +184,7 @@ export default function UsersTableView({
                     />
                   </TableCell>
                   <TableCell>
-                    <Avatar className="w-10 h-10">
+                    <Avatar className="size-10">
                       <AvatarImage
                         src={user.avatar || "/placeholder.svg"}
                         alt={`${user.first_name} ${user.last_name}`}
@@ -217,28 +219,28 @@ export default function UsersTableView({
                         size="sm"
                         variant="ghost"
                         onClick={() => onEditUser(user)}
-                        className="h-8 w-8 p-0"
+                        className="size-8 p-0"
                         title={t("users.editUser")}
                       >
-                        <Edit className="w-4 h-4" />
+                        <Edit className="size-4" />
                       </Button>
                       <Button
                         size="sm"
                         variant="ghost"
                         onClick={() => onDeleteUser(user)}
-                        className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                        className="size-8 p-0 text-red-600 hover:text-red-700"
                         title={t("users.deleteUser")}
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="size-4" />
                       </Button>
                       <Link href={`/users/${user.id}`}>
                         <Button
                           size="sm"
                           variant="ghost"
-                          className="h-8 w-8 p-0"
+                          className="size-8 p-0"
                           title={t("users.userDetails")}
                         >
-                          <Eye className="w-4 h-4" />
+                          <Eye className="size-4" />
                         </Button>
                       </Link>
                     </div>
@@ -270,5 +272,5 @@ export default function UsersTableView({
         </div>
       </div>
     </div>
-  );
+  )
 }

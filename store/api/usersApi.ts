@@ -1,7 +1,9 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import axiosBaseQuery from "./baseQuery";
-import { env } from "../../env.mjs";
-import type { UsersResponse, UserResponse } from "@/types/user";
+import { createApi } from "@reduxjs/toolkit/query/react"
+
+import type { UserResponse, UsersResponse } from "@/types/user"
+
+import { env } from "../../env.mjs"
+import axiosBaseQuery from "./baseQuery"
 
 export const usersApi = createApi({
   reducerPath: "usersApi",
@@ -55,7 +57,7 @@ export const usersApi = createApi({
       invalidatesTags: ["User"],
     }),
   }),
-});
+})
 
 export const {
   useGetUsersQuery,
@@ -63,4 +65,4 @@ export const {
   useCreateUserMutation,
   useUpdateUserMutation,
   useDeleteUserMutation,
-} = usersApi;
+} = usersApi

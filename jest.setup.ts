@@ -1,6 +1,6 @@
-"use client";
+"use client"
 
-import "@testing-library/jest-dom";
+import "@testing-library/jest-dom"
 
 // Mock Next.js router
 jest.mock("next/navigation", () => ({
@@ -12,59 +12,59 @@ jest.mock("next/navigation", () => ({
       refresh: jest.fn(),
       replace: jest.fn(),
       prefetch: jest.fn(),
-    };
+    }
   },
   usePathname() {
-    return "/";
+    return "/"
   },
   useParams() {
-    return {};
+    return {}
   },
   useSearchParams() {
-    return new URLSearchParams();
+    return new URLSearchParams()
   },
-}));
+}))
 
 // Mock environment variables
-process.env.NEXT_PUBLIC_API_BASE_URL = "https://reqres.in/api";
-process.env.NEXT_PUBLIC_API_KEY = "test-api-key";
+process.env.NEXT_PUBLIC_API_BASE_URL = "https://reqres.in/api"
+process.env.NEXT_PUBLIC_API_KEY = "test-api-key"
 
 // Mock IntersectionObserver
 // Mock IntersectionObserver
 class MockIntersectionObserver implements IntersectionObserver {
-  readonly root: Element | null = null;
-  readonly rootMargin: string = "";
-  readonly thresholds: ReadonlyArray<number> = [];
+  readonly root: Element | null = null
+  readonly rootMargin: string = ""
+  readonly thresholds: ReadonlyArray<number> = []
 
   constructor(
     public callback: IntersectionObserverCallback,
     public options?: IntersectionObserverInit
   ) {}
 
-  observe = jest.fn();
-  unobserve = jest.fn();
-  disconnect = jest.fn();
-  takeRecords = jest.fn(() => []);
+  observe = jest.fn()
+  unobserve = jest.fn()
+  disconnect = jest.fn()
+  takeRecords = jest.fn(() => [])
 }
 
 Object.defineProperty(global, "IntersectionObserver", {
   writable: true,
   configurable: true,
   value: MockIntersectionObserver,
-});
+})
 
 // Mock ResizeObserver
 class MockResizeObserver {
-  observe = jest.fn();
-  unobserve = jest.fn();
-  disconnect = jest.fn();
+  observe = jest.fn()
+  unobserve = jest.fn()
+  disconnect = jest.fn()
 }
 
 Object.defineProperty(global, "ResizeObserver", {
   writable: true,
   configurable: true,
   value: MockResizeObserver,
-});
+})
 
 // Mock window.matchMedia
 Object.defineProperty(window, "matchMedia", {
@@ -79,4 +79,4 @@ Object.defineProperty(window, "matchMedia", {
     removeEventListener: jest.fn(),
     dispatchEvent: jest.fn(),
   })),
-});
+})

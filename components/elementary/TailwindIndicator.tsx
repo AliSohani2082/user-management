@@ -1,4 +1,4 @@
-import { env } from "@/env.mjs";
+import { env } from "@/env.mjs"
 
 /**
  * TailwindIndicator Component
@@ -20,7 +20,7 @@ import { env } from "@/env.mjs";
 export function TailwindIndicator() {
   // Don't render anything in production
   if (env.NODE_ENV === "production") {
-    return null;
+    return null
   }
 
   return (
@@ -32,5 +32,5 @@ export function TailwindIndicator() {
       <div className="hidden xl:block 2xl:hidden">xl</div>
       <div className="hidden 2xl:block">2xl</div>
     </div>
-  );
+  )
 }

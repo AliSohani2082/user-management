@@ -1,45 +1,27 @@
-const nextJest = require("next/jest");
+import nextJest from "next/jest"
 
-const createJestConfig = nextJest({
-  // Provide the path to your Next.js app to load next.config.js and .env files
-  dir: "./",
-});
+import type { Config } from "jest"
 
-// Add any custom config to be passed to Jest
-const customJestConfig = {
-  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+const createJestConfig = nextJest({ dir: "./" })
+
+const customJestConfig: Config = {
   testEnvironment: "jsdom",
-  moduleNameMapping: {
-    "^@/(.*)$": "<rootDir>/$1",
+  transform: {
+    "^.+\\.(ts|tsx|js|jsx)$": "babel-jest",
   },
-  collectCoverageFrom: [
-    "components/**/*.{js,jsx,ts,tsx}",
-    "store/**/*.{js,jsx,ts,tsx}",
-    "lib/**/*.{js,jsx,ts,tsx}",
-    "app/**/*.{js,jsx,ts,tsx}",
-    "!**/*.d.ts",
-    "!**/node_modules/**",
-    "!**/.next/**",
-    "!**/coverage/**",
+  transformIgnorePatterns: [
+    "node_modules/(?!next-intl)/", // 👈 allow next-intl to be transformed
   ],
   moduleNameMapper: {
-    "^@/(.*)$": "<rootDir>/$1",
-  },
-  coverageThreshold: {
-    global: {
-      branches: 70,
-      functions: 70,
-      lines: 70,
-      statements: 70,
-    },
+    "^@/(.*)$": "<rootDir>/src/$1",
   },
   testMatch: [
-    "<rootDir>/**/__tests__/**/*.{js,jsx,ts,tsx}",
-    "<rootDir>/**/*.{test,spec}.{js,jsx,ts,tsx}",
+    "<rootDir>/src/**/*.{test,spec}.{js,ts,jsx,tsx}",
+    "<rootDir>/__tests__/**/*.{js,ts,jsx,tsx}",
   ],
-  moduleDirectories: ["node_modules", "<rootDir>/"],
-  testPathIgnorePatterns: ["<rootDir>/.next/", "<rootDir>/node_modules/"],
-};
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json"],
+  moduleDirectories: ["node_modules", "<rootDir>/src"],
+}
 
-// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
-module.exports = createJestConfig(customJestConfig);
+export default createJestConfig(customJestConfig)

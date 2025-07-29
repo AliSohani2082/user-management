@@ -1,23 +1,24 @@
-"use client";
+"use client"
 
-import { LayoutGrid, Table } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
-import { cn } from "@/lib/utils";
+import { LayoutGrid, Table } from "lucide-react"
+import { useTranslations } from "next-intl"
+
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/ui/button"
 
 interface UsersViewToggleProps {
-  view: "card" | "table";
-  onViewChange: (view: "card" | "table") => void;
+  view: "card" | "table"
+  onViewChange: (view: "card" | "table") => void
 }
 
 export default function UsersViewToggle({
   view,
   onViewChange,
 }: UsersViewToggleProps) {
-  const t = useTranslations("views");
+  const t = useTranslations("views")
 
   return (
-    <div className="flex items-center border rounded-lg p-1">
+    <div className="flex items-center rounded-lg border p-1">
       <Button
         variant="ghost"
         size="sm"
@@ -27,7 +28,7 @@ export default function UsersViewToggle({
           view === "card" && "bg-primary text-primary-foreground shadow-sm"
         )}
       >
-        <LayoutGrid className="w-4 h-4 mr-2" />
+        <LayoutGrid className="mr-2 size-4" />
         {t("card")}
       </Button>
       <Button
@@ -39,9 +40,9 @@ export default function UsersViewToggle({
           view === "table" && "bg-primary text-primary-foreground shadow-sm"
         )}
       >
-        <Table className="w-4 h-4 mr-2" />
+        <Table className="mr-2 size-4" />
         {t("table")}
       </Button>
     </div>
-  );
+  )
 }

@@ -1,4 +1,4 @@
-import localFont from "next/font/local";
+import localFont from "next/font/local"
 
 export const fontSans = localFont({
   src: [
@@ -22,4 +22,4 @@ export const fontSans = localFont({
   display: "swap",
   variable: "--font-ir-sans",
   preload: true,
-});
+})

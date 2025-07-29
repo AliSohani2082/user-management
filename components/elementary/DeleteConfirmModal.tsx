@@ -1,22 +1,23 @@
-"use client";
+"use client"
 
-import { AlertTriangle } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { AlertTriangle } from "lucide-react"
+import { useTranslations } from "next-intl"
+
+import { Button } from "@/components/ui/button"
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
-import { useTranslations } from "next-intl";
+} from "@/components/ui/dialog"
 
 interface DeleteConfirmModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  onConfirm: () => void;
-  isLoading: boolean;
-  userName: string;
+  isOpen: boolean
+  onClose: () => void
+  onConfirm: () => void
+  isLoading: boolean
+  userName: string
 }
 
 export default function DeleteConfirmModal({
@@ -26,14 +27,14 @@ export default function DeleteConfirmModal({
   isLoading,
   userName,
 }: DeleteConfirmModalProps) {
-  const t = useTranslations();
+  const t = useTranslations()
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-red-600">
-            <AlertTriangle className="w-5 h-5" />
+            <AlertTriangle className="size-5" />
             {t("modals.deleteConfirm")}
           </DialogTitle>
           <DialogDescription>
@@ -60,5 +61,5 @@ export default function DeleteConfirmModal({
         </div>
       </DialogContent>
     </Dialog>
-  );
+  )
 }

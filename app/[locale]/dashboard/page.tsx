@@ -1,50 +1,51 @@
-"use client";
+"use client"
 
-import { Suspense, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { Suspense, useState } from "react"
+import { useDeleteUserMutation, useGetUsersQuery } from "@/store/api/usersApi"
+import { setCurrentPage } from "@/store/slices/usersSlice"
 import {
+  BarChart3,
+  Edit,
+  Eye,
+  PieChart,
   Plus,
   RefreshCw,
-  Users,
-  TrendingUp,
-  BarChart3,
-  PieChart,
-  Edit,
   Trash2,
-  Eye,
-} from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
-import { useTranslations } from "next-intl";
-import { Link } from "@/lib/i18n/navigation";
-import type { RootState } from "@/store/store";
-import { useGetUsersQuery, useDeleteUserMutation } from "@/store/api/usersApi";
-import { setCurrentPage } from "@/store/slices/usersSlice";
-import { useUsersFilters } from "@/hooks/use-users-filters";
-import UserModal from "@/components/elementary/UserModal";
-import DeleteConfirmModal from "@/components/elementary/DeleteConfirmModal";
-import Pagination from "@/components/elementary/Pagination";
-import LoadingSpinner from "@/components/elementary/LoadingSpinner";
-import ErrorMessage from "@/components/elementary/ErrorMessage";
-import UsersFilters from "@/components/elementary/UsersFilters";
-import UsersViewToggle from "@/components/elementary/UsersViewToggle";
-import UsersTableView from "@/components/elementary/UsersTableView";
-import type { User } from "@/types/user";
+  TrendingUp,
+  Users,
+} from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useDispatch, useSelector } from "react-redux"
+
+import type { RootState } from "@/store/store"
+import type { User } from "@/types/user"
+
+import { Link } from "@/lib/i18n/navigation"
+import { useToast } from "@/hooks/use-toast"
+import { useUsersFilters } from "@/hooks/use-users-filters"
+import DeleteConfirmModal from "@/components/elementary/DeleteConfirmModal"
+import ErrorMessage from "@/components/elementary/ErrorMessage"
+import LoadingSpinner from "@/components/elementary/LoadingSpinner"
+import Pagination from "@/components/elementary/Pagination"
+import UserModal from "@/components/elementary/UserModal"
+import UsersFilters from "@/components/elementary/UsersFilters"
+import UsersTableView from "@/components/elementary/UsersTableView"
+import UsersViewToggle from "@/components/elementary/UsersViewToggle"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 function DashboardContent() {
-  const dispatch = useDispatch();
-  const { toast } = useToast();
-  const t = useTranslations();
-  const { currentPage } = useSelector((state: RootState) => state.users);
-  const { filters, updateFilter, resetFilters, filterUsers } =
-    useUsersFilters();
+  const dispatch = useDispatch()
+  const { toast } = useToast()
+  const t = useTranslations()
+  const { currentPage } = useSelector((state: RootState) => state.users)
+  const { filters, updateFilter, resetFilters, filterUsers } = useUsersFilters()
 
-  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [selectedUser, setSelectedUser] = useState<User | null>(null);
-  const [modalMode, setModalMode] = useState<"create" | "edit">("create");
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false)
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [selectedUser, setSelectedUser] = useState<User | null>(null)
+  const [modalMode, setModalMode] = useState<"create" | "edit">("create")
 
   // RTK Query hooks
   const {
@@ -52,84 +53,84 @@ function DashboardContent() {
     error,
     isLoading,
     refetch,
-  } = useGetUsersQuery(filters.page);
-  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
+  } = useGetUsersQuery(filters.page)
+  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation()
 
   const handlePageChange = (page: number) => {
-    updateFilter("page", page);
-    dispatch(setCurrentPage(page));
-  };
+    updateFilter("page", page)
+    dispatch(setCurrentPage(page))
+  }
 
   const handleCreateUser = () => {
-    setSelectedUser(null);
-    setModalMode("create");
-    setIsUserModalOpen(true);
-  };
+    setSelectedUser(null)
+    setModalMode("create")
+    setIsUserModalOpen(true)
+  }
 
   const handleEditUser = (user: User) => {
-    setSelectedUser(user);
-    setModalMode("edit");
-    setIsUserModalOpen(true);
-  };
+    setSelectedUser(user)
+    setModalMode("edit")
+    setIsUserModalOpen(true)
+  }
 
   const handleDeleteUser = (user: User) => {
-    setSelectedUser(user);
-    setIsDeleteModalOpen(true);
-  };
+    setSelectedUser(user)
+    setIsDeleteModalOpen(true)
+  }
 
   const confirmDelete = async () => {
-    if (!selectedUser) return;
+    if (!selectedUser) return
 
     try {
-      await deleteUser(selectedUser.id).unwrap();
+      await deleteUser(selectedUser.id).unwrap()
       toast({
         title: t("common.success"),
         description: t("users.userDeleted"),
-      });
-      setIsDeleteModalOpen(false);
-      setSelectedUser(null);
-      refetch();
+      })
+      setIsDeleteModalOpen(false)
+      setSelectedUser(null)
+      refetch()
     } catch (error) {
       toast({
         title: t("common.error"),
         description: t("users.userDeleteError"),
         variant: "destructive",
-      });
+      })
     }
-  };
+  }
 
   const handleReload = () => {
-    refetch();
+    refetch()
     toast({
       title: t("common.refresh"),
       description: t("users.dataRefreshed"),
-    });
-  };
+    })
+  }
 
   const handleSort = (field: string) => {
     if (filters.sortBy === field) {
-      updateFilter("sortOrder", filters.sortOrder === "asc" ? "desc" : "asc");
+      updateFilter("sortOrder", filters.sortOrder === "asc" ? "desc" : "asc")
     } else {
-      updateFilter("sortBy", field);
-      updateFilter("sortOrder", "asc");
+      updateFilter("sortBy", field)
+      updateFilter("sortOrder", "asc")
     }
-  };
+  }
 
   const handleViewChange = (view: "card" | "table") => {
-    updateFilter("view", view);
-  };
+    updateFilter("view", view)
+  }
 
-  if (isLoading) return <LoadingSpinner />;
-  if (error) return <ErrorMessage error={error} onRetry={refetch} />;
+  if (isLoading) return <LoadingSpinner />
+  if (error) return <ErrorMessage error={error} onRetry={refetch} />
 
   // Filter and sort users
-  const allUsers = usersData?.data || [];
-  const filteredUsers = filterUsers(allUsers);
+  const allUsers = usersData?.data || []
+  const filteredUsers = filterUsers(allUsers)
 
   return (
     <div className="container mx-auto px-4 py-8">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-8">
+      <div className="mb-8 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">
             {t("users.dashboardTitle")}
@@ -137,24 +138,24 @@ function DashboardContent() {
         </div>
         <div className="flex gap-2">
           <Button onClick={handleReload} variant="outline" size="sm">
-            <RefreshCw className="w-4 h-4 mr-2" />
+            <RefreshCw className="mr-2 size-4" />
             {t("common.refresh")}
           </Button>
           <Button onClick={handleCreateUser} size="sm">
-            <Plus className="w-4 h-4 mr-2" />
+            <Plus className="mr-2 size-4" />
             {t("users.newUser")}
           </Button>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div className="mb-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">
               {t("stats.totalUsers")}
             </CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
+            <Users className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{usersData?.total || 0}</div>
@@ -169,7 +170,7 @@ function DashboardContent() {
             <CardTitle className="text-sm font-medium">
               {t("stats.currentPage")}
             </CardTitle>
-            <BarChart3 className="h-4 w-4 text-muted-foreground" />
+            <BarChart3 className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{filters.page}</div>
@@ -184,7 +185,7 @@ function DashboardContent() {
             <CardTitle className="text-sm font-medium">
               {t("stats.displayedUsers")}
             </CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            <TrendingUp className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{filteredUsers.length}</div>
@@ -199,7 +200,7 @@ function DashboardContent() {
             <CardTitle className="text-sm font-medium">
               {t("stats.perPage")}
             </CardTitle>
-            <PieChart className="h-4 w-4 text-muted-foreground" />
+            <PieChart className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{usersData?.per_page || 0}</div>
@@ -213,9 +214,9 @@ function DashboardContent() {
       {/* Users Section */}
       <Card className="mb-8">
         <CardHeader>
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <CardTitle className="flex items-center gap-2">
-              <Users className="w-5 h-5" />
+              <Users className="size-5" />
               {t("users.usersList")}
             </CardTitle>
             <UsersViewToggle
@@ -244,12 +245,12 @@ function DashboardContent() {
               onSort={handleSort}
             />
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {filteredUsers.length === 0 ? (
-                <div className="col-span-full text-center py-12 text-gray-500">
+                <div className="col-span-full py-12 text-center text-gray-500">
                   {filters.search || filters.domain ? (
                     <div>
-                      <p className="text-lg mb-2">
+                      <p className="mb-2 text-lg">
                         {t("users.noUsersWithFilters")}
                       </p>
                       <Button variant="outline" onClick={resetFilters}>
@@ -264,27 +265,27 @@ function DashboardContent() {
                 filteredUsers.map((user: User) => (
                   <Card
                     key={user.id}
-                    className="hover:shadow-lg transition-shadow"
+                    className="transition-shadow hover:shadow-lg"
                   >
                     <CardHeader className="pb-3">
                       <div className="flex items-center gap-3 space-x-reverse">
                         <img
                           src={user.avatar || "/placeholder.svg"}
                           alt={`${user.first_name} ${user.last_name}`}
-                          className="w-12 h-12 rounded-full object-cover"
+                          className="size-12 rounded-full object-cover"
                         />
-                        <div className="flex-1 min-w-0">
-                          <CardTitle className="text-lg truncate">
+                        <div className="min-w-0 flex-1">
+                          <CardTitle className="truncate text-lg">
                             {user.first_name} {user.last_name}
                           </CardTitle>
-                          <p className="text-sm text-gray-500 truncate">
+                          <p className="truncate text-sm text-gray-500">
                             {user.email}
                           </p>
                         </div>
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="flex justify-between items-center">
+                      <div className="flex items-center justify-between">
                         <Badge variant="secondary">
                           {t("users.id")}: {user.id}
                         </Badge>
@@ -293,25 +294,25 @@ function DashboardContent() {
                             size="sm"
                             variant="ghost"
                             onClick={() => handleEditUser(user)}
-                            className="h-8 w-8 p-0"
+                            className="size-8 p-0"
                           >
-                            <Edit className="w-4 h-4" />
+                            <Edit className="size-4" />
                           </Button>
                           <Button
                             size="sm"
                             variant="ghost"
                             onClick={() => handleDeleteUser(user)}
-                            className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                            className="size-8 p-0 text-red-600 hover:text-red-700"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="size-4" />
                           </Button>
                           <Link href={`/users/${user.id}`}>
                             <Button
                               size="sm"
                               variant="ghost"
-                              className="h-8 w-8 p-0"
+                              className="size-8 p-0"
                             >
-                              <Eye className="w-4 h-4" />
+                              <Eye className="size-4" />
                             </Button>
                           </Link>
                         </div>
@@ -341,8 +342,8 @@ function DashboardContent() {
         user={selectedUser}
         mode={modalMode}
         onSuccess={() => {
-          setIsUserModalOpen(false);
-          refetch();
+          setIsUserModalOpen(false)
+          refetch()
         }}
       />
 
@@ -358,7 +359,7 @@ function DashboardContent() {
         }
       />
     </div>
-  );
+  )
 }
 
 export default function DashboardPage() {
@@ -366,5 +367,5 @@ export default function DashboardPage() {
     <Suspense fallback={<LoadingSpinner />}>
       <DashboardContent />
     </Suspense>
-  );
+  )
 }

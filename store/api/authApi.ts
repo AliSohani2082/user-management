@@ -1,6 +1,7 @@
-import { createApi } from "@reduxjs/toolkit/query/react";
-import axiosBaseQuery from "./baseQuery";
-import { env } from "../../env.mjs";
+import { createApi } from "@reduxjs/toolkit/query/react"
+
+import { env } from "../../env.mjs"
+import axiosBaseQuery from "./baseQuery"
 
 export const authApi = createApi({
   reducerPath: "authApi",
@@ -35,7 +36,7 @@ export const authApi = createApi({
       }),
     }),
   }),
-});
+})
 
 export const { useLoginMutation, useRegisterMutation, useLogoutMutation } =
-  authApi;
+  authApi

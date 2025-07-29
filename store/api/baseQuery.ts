@@ -1,17 +1,19 @@
-import axios from "axios";
-import type { BaseQueryFn } from "@reduxjs/toolkit/query";
-import { env } from "../../env.mjs";
+import axios from "axios"
+
+import type { BaseQueryFn } from "@reduxjs/toolkit/query"
+
+import { env } from "../../env.mjs"
 
 const axiosBaseQuery =
   (
     { baseUrl }: { baseUrl: string } = { baseUrl: "" }
   ): BaseQueryFn<
     {
-      url: string;
-      method?: "GET" | "POST" | "PUT" | "DELETE";
-      data?: any;
-      params?: any;
-      headers?: any;
+      url: string
+      method?: "GET" | "POST" | "PUT" | "DELETE"
+      data?: any
+      params?: any
+      headers?: any
     },
     unknown,
     unknown
@@ -28,17 +30,17 @@ const axiosBaseQuery =
           "Content-Type": "application/json",
           ...headers,
         },
-      });
-      return { data: result.data };
+      })
+      return { data: result.data }
     } catch (axiosError: any) {
-      const err = axiosError;
+      const err = axiosError
       return {
         error: {
           status: err.response?.status,
           data: err.response?.data || err.message,
         },
-      };
+      }
     }
-  };
+  }
 
-export default axiosBaseQuery;
+export default axiosBaseQuery

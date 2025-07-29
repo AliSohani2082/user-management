@@ -1,62 +1,65 @@
-"use client";
+"use client"
 
-import { useSelector, useDispatch } from "react-redux";
-import { Link, useRouter, usePathname } from "@/lib/i18n/navigation";
-import { Users, LogOut, BarChart3 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { useTranslations } from "next-intl";
-import type { RootState } from "@/store/store";
-import { logout } from "@/store/slices/authSlice";
-import { useLogoutMutation } from "@/store/api/authApi";
-import { useToast } from "@/hooks/use-toast";
-import LanguageSwitcher from "./LanguageSwitcher";
+import { useLogoutMutation } from "@/store/api/authApi"
+import { logout } from "@/store/slices/authSlice"
+import { BarChart3, LogOut, Users } from "lucide-react"
+import { useTranslations } from "next-intl"
+import { useDispatch, useSelector } from "react-redux"
+
+import type { RootState } from "@/store/store"
+
+import { Link, usePathname, useRouter } from "@/lib/i18n/navigation"
+import { useToast } from "@/hooks/use-toast"
+import { Button } from "@/components/ui/button"
+
+import LanguageSwitcher from "./LanguageSwitcher"
 
 export default function Navbar() {
-  const dispatch = useDispatch();
-  const router = useRouter();
-  const pathname = usePathname();
-  const { toast } = useToast();
+  const dispatch = useDispatch()
+  const router = useRouter()
+  const pathname = usePathname()
+  const { toast } = useToast()
   const { isAuthenticated, user } = useSelector(
     (state: RootState) => state.auth
-  );
-  const [logoutMutation] = useLogoutMutation();
-  const t = useTranslations();
+  )
+  const [logoutMutation] = useLogoutMutation()
+  const t = useTranslations()
 
   const handleLogout = async () => {
     try {
-      await logoutMutation().unwrap();
+      await logoutMutation().unwrap()
     } catch (error) {
       // Continue with logout even if API call fails
     } finally {
-      dispatch(logout());
+      dispatch(logout())
       toast({
         title: t("auth.logoutSuccess"),
         description: t("auth.logoutSuccess"),
-      });
-      router.push("/auth/login");
+      })
+      router.push("/auth/login")
     }
-  };
+  }
 
   // Don't show navbar on auth pages
   if (pathname.startsWith("/auth")) {
-    return null;
+    return null
   }
 
   if (!isAuthenticated) {
-    return null;
+    return null
   }
 
   return (
-    <nav className="bg-white shadow-sm border-b">
+    <nav className="border-b bg-white shadow-sm">
       <div className="container mx-auto px-4">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <div className="flex items-center space-x-4 space-x-reverse">
             <Link
               href="/dashboard"
               className="flex items-center gap-2 space-x-reverse"
             >
-              <Users className="w-8 h-8 text-blue-600" />
+              <Users className="size-8 text-blue-600" />
               <span className="text-xl font-bold text-gray-900">
                 {t("navigation.userManagement")}
               </span>
@@ -64,28 +67,28 @@ export default function Navbar() {
           </div>
 
           {/* Navigation Links */}
-          <div className="hidden md:flex items-center gap-6 space-x-reverse">
+          <div className="hidden items-center gap-6 space-x-reverse md:flex">
             <Link
               href="/dashboard"
-              className={`flex items-center gap-2 space-x-reverse px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`flex items-center gap-2 space-x-reverse rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                 pathname === "/dashboard"
                   ? "bg-blue-100 text-blue-700"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               }`}
             >
-              <BarChart3 className="w-4 h-4" />
+              <BarChart3 className="size-4" />
               <span>{t("navigation.dashboard")}</span>
             </Link>
 
             <Link
               href="/users"
-              className={`flex items-center gap-2 space-x-reverse px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+              className={`flex items-center gap-2 space-x-reverse rounded-md px-3 py-2 text-sm font-medium transition-colors ${
                 pathname.startsWith("/users")
                   ? "bg-blue-100 text-blue-700"
-                  : "text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+                  : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"
               }`}
             >
-              <Users className="w-4 h-4" />
+              <Users className="size-4" />
               <span>{t("navigation.users")}</span>
             </Link>
           </div>
@@ -105,7 +108,7 @@ export default function Navbar() {
                 size="sm"
                 className="flex items-center space-x-2 space-x-reverse bg-transparent"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="size-4" />
                 <span>{t("navigation.logout")}</span>
               </Button>
             </div>
@@ -113,5 +116,5 @@ export default function Navbar() {
         </div>
       </div>
     </nav>
-  );
+  )
 }

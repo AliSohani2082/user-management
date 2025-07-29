@@ -1,22 +1,16 @@
-import { Metadata } from "next";
-import { env } from "@/env.mjs";
-import { getTranslations } from "next-intl/server";
+import { Metadata } from "next"
+import { env } from "@/env.mjs"
+import { getTranslations } from "next-intl/server"
 
 type SeoProps = {
-  locale: string;
-  pageName?:
-    | "dashboard"
-    | "blog"
-    | "pathFinder"
-    | "users"
-    | "about"
-    | "contact";
-};
+  locale: string
+  pageName?: "dashboard" | "blog" | "pathFinder" | "users" | "about" | "contact"
+}
 
 export async function Seo({ locale, pageName = "dashboard" }: SeoProps) {
-  const t = await getTranslations();
+  const t = await getTranslations()
 
-  return generateMetadata(t, locale, pageName);
+  return generateMetadata(t, locale, pageName)
 }
 
 function generateMetadata(t: any, locale: string, pageName: string): Metadata {
@@ -24,17 +18,17 @@ function generateMetadata(t: any, locale: string, pageName: string): Metadata {
   const pageKeywords: Record<string, string> = {
     dashboard: t("metadata.dashboard.keywords"),
     users: t("metadata.users.keywords"),
-  };
+  }
 
   const pageTitles: Record<string, string> = {
     dashboard: t("metadata.dashboard.title"),
     users: t("metadata.users.title"),
-  };
+  }
 
   const pageDescriptions: Record<string, string> = {
     dashboard: t("metadata.dashboard.description"),
     users: t("metadata.users.description"),
-  };
+  }
 
   return {
     title: pageTitles[pageName] || t("metadata.title"),
@@ -81,5 +75,5 @@ function generateMetadata(t: any, locale: string, pageName: string): Metadata {
     },
     authors: [{ name: "Tourbin" }],
     category: "travel",
-  };
+  }
 }
