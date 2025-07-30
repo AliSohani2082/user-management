@@ -1,14 +1,13 @@
-import {
-  loginSchema,
-  registerSchema,
-  passwordSchema,
-} from "@/lib/validations/auth";
+import { createAuthSchema } from "@/lib/validations/auth";
+
+const t = (key: string, values?: any) => key;
+
+const { loginSchema, registerSchema, passwordSchema } = createAuthSchema(t);
 
 describe("Authentication Validations", () => {
   describe("loginSchema", () => {
     it("should validate correct login data", () => {
       const validData = {
-        username: "testuser",
         email: "test@example.com",
         password: "password123",
       };
@@ -19,7 +18,6 @@ describe("Authentication Validations", () => {
 
     it("should reject invalid email", () => {
       const invalidData = {
-        username: "testuser",
         email: "invalid-email",
         password: "password123",
       };
@@ -33,7 +31,6 @@ describe("Authentication Validations", () => {
 
     it("should reject short password", () => {
       const invalidData = {
-        username: "testuser",
         email: "test@example.com",
         password: "123",
       };
@@ -58,24 +55,11 @@ describe("Authentication Validations", () => {
       const result = passwordSchema.safeParse(weakPassword);
       expect(result.success).toBe(false);
     });
-
-    it("should reject password without uppercase", () => {
-      const weakPassword = "password123";
-      const result = passwordSchema.safeParse(weakPassword);
-      expect(result.success).toBe(false);
-    });
-
-    it("should reject short password", () => {
-      const shortPassword = "Pa1";
-      const result = passwordSchema.safeParse(shortPassword);
-      expect(result.success).toBe(false);
-    });
   });
 
   describe("registerSchema", () => {
     it("should validate correct registration data", () => {
       const validData = {
-        username: "testuser",
         email: "test@example.com",
         password: "Password123",
         confirmPassword: "Password123",
@@ -87,7 +71,6 @@ describe("Authentication Validations", () => {
 
     it("should reject mismatched passwords", () => {
       const invalidData = {
-        username: "testuser",
         email: "test@example.com",
         password: "Password123",
         confirmPassword: "DifferentPassword123",

@@ -1,37 +1,46 @@
-"use client"
+"use client";
 
-import { AlertCircle, RefreshCw } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { AlertCircle, RefreshCw } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-import { Button } from "@/components/ui/button"
-import { Card, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 interface ErrorMessageProps {
-  error: any
-  onRetry?: () => void
+  error: any;
+  onRetry?: () => void;
 }
 
 export default function ErrorMessage({ error, onRetry }: ErrorMessageProps) {
-  const t = useTranslations("common")
+  const t = useTranslations("common");
 
   const getErrorMessage = (error: any) => {
-    if (typeof error === "string") return error
-    if (error?.data?.error) return error.data.error
-    if (error?.message) return error.message
-    return t("error")
-  }
+    if (typeof error === "string") return error;
+    if (error?.data?.error) return error.data.error;
+    if (error?.message) return error.message;
+    return t("error");
+  };
 
   return (
     <div className="flex min-h-[400px] items-center justify-center p-4">
       <Card className="w-full max-w-md">
         <CardContent className="p-6 text-center">
           <AlertCircle className="mx-auto mb-4 size-12 text-red-500" />
-          <h3 className="mb-2 text-lg font-semibold text-gray-900">
+          <h3
+            className="mb-2 text-lg font-semibold text-gray-900"
+            data-testid="error"
+          >
             {t("error")}
           </h3>
-          <p className="mb-4 text-gray-600">{getErrorMessage(error)}</p>
+          <p data-testid="unknown-error" className="mb-4 text-gray-600">
+            {getErrorMessage(error)}
+          </p>
           {onRetry && (
-            <Button onClick={onRetry} className="flex items-center gap-2">
+            <Button
+              onClick={onRetry}
+              className="flex items-center gap-2"
+              data-testid="retry"
+            >
               <RefreshCw className="size-4" />
               {t("refresh")}
             </Button>
@@ -39,5 +48,5 @@ export default function ErrorMessage({ error, onRetry }: ErrorMessageProps) {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

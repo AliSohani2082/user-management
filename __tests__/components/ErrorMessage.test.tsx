@@ -1,13 +1,18 @@
-import { render, screen, fireEvent } from "@testing-library/react";
 import ErrorMessage from "@/components/elementary/ErrorMessage";
-import { jest } from "@jest/globals";
+import enMessages from "@/messages/en.json";
+import { fireEvent, render, screen } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
 
 describe("ErrorMessage", () => {
   it("renders error message with string error", () => {
-    render(<ErrorMessage error="Test error message" />);
+    render(
+      <NextIntlClientProvider locale="en" messages={enMessages}>
+        <ErrorMessage error="Test error message" />
+      </NextIntlClientProvider>
+    );
 
     expect(screen.getByText("Test error message")).toBeInTheDocument();
-    expect(screen.getByText("خطا در بارگذاری")).toBeInTheDocument();
+    expect(screen.getByTestId("error")).toBeInTheDocument();
   });
 
   it("renders error message with object error", () => {
@@ -15,17 +20,25 @@ describe("ErrorMessage", () => {
       data: { error: "API error message" },
     };
 
-    render(<ErrorMessage error={error} />);
+    render(
+      <NextIntlClientProvider locale="en" messages={enMessages}>
+        <ErrorMessage error={error} />
+      </NextIntlClientProvider>
+    );
 
     expect(screen.getByText("API error message")).toBeInTheDocument();
   });
 
   it("renders retry button when onRetry is provided", () => {
-    const mockRetry = jest.fn();
+    const mockRetry = vi.fn();
 
-    render(<ErrorMessage error="Test error" onRetry={mockRetry} />);
+    render(
+      <NextIntlClientProvider locale="en" messages={enMessages}>
+        <ErrorMessage error="Test error" onRetry={mockRetry} />
+      </NextIntlClientProvider>
+    );
 
-    const retryButton = screen.getByText("تلاش مجدد");
+    const retryButton = screen.getByTestId("retry");
     expect(retryButton).toBeInTheDocument();
 
     fireEvent.click(retryButton);
@@ -33,15 +46,22 @@ describe("ErrorMessage", () => {
   });
 
   it("does not render retry button when onRetry is not provided", () => {
-    render(<ErrorMessage error="Test error" />);
-
-    expect(screen.queryByText("تلاش مجدد")).not.toBeInTheDocument();
+    render(
+      <NextIntlClientProvider locale="en" messages={enMessages}>
+        <ErrorMessage error="Test error" />
+      </NextIntlClientProvider>
+    );
+    expect(screen.queryByTestId("retry")).not.toBeInTheDocument();
   });
 
   it("handles error with message property", () => {
     const error = { message: "Error message from message property" };
 
-    render(<ErrorMessage error={error} />);
+    render(
+      <NextIntlClientProvider locale="en" messages={enMessages}>
+        <ErrorMessage error={error} />
+      </NextIntlClientProvider>
+    );
 
     expect(
       screen.getByText("Error message from message property")
@@ -51,8 +71,12 @@ describe("ErrorMessage", () => {
   it("shows default message for unknown error format", () => {
     const error = { someProperty: "value" };
 
-    render(<ErrorMessage error={error} />);
+    render(
+      <NextIntlClientProvider locale="en" messages={enMessages}>
+        <ErrorMessage error={error} />
+      </NextIntlClientProvider>
+    );
 
-    expect(screen.getByText("خطای غیرمنتظره رخ داده است")).toBeInTheDocument();
+    expect(screen.getByTestId("unknown-error")).toBeInTheDocument();
   });
 });

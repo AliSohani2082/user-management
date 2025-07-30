@@ -1,22 +1,36 @@
-import { render, screen } from "@testing-library/react";
 import LoadingSpinner from "@/components/elementary/LoadingSpinner";
+import enMessages from "@/messages/en.json";
+import { render, screen } from "@testing-library/react";
+import { NextIntlClientProvider } from "next-intl";
 
 describe("LoadingSpinner", () => {
   it("renders loading spinner with text", () => {
-    render(<LoadingSpinner />);
+    render(
+      <NextIntlClientProvider locale="en" messages={enMessages}>
+        <LoadingSpinner />
+      </NextIntlClientProvider>
+    );
 
-    expect(screen.getByText("در حال بارگذاری...")).toBeInTheDocument();
+    expect(screen.getByTestId("loading")).toBeInTheDocument();
   });
 
   it("has correct accessibility attributes", () => {
-    render(<LoadingSpinner />);
+    render(
+      <NextIntlClientProvider locale="en" messages={enMessages}>
+        <LoadingSpinner />
+      </NextIntlClientProvider>
+    );
 
-    const spinner = screen.getByText("در حال بارگذاری...");
+    const spinner = screen.getByTestId("loading");
     expect(spinner).toBeInTheDocument();
   });
 
   it("applies correct CSS classes", () => {
-    const { container } = render(<LoadingSpinner />);
+    const { container } = render(
+      <NextIntlClientProvider locale="en" messages={enMessages}>
+        <LoadingSpinner />
+      </NextIntlClientProvider>
+    );
 
     expect(container.firstChild).toHaveClass(
       "flex",

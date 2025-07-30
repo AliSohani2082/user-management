@@ -1,23 +1,23 @@
-"use client"
+"use client";
 
-import { AlertTriangle } from "lucide-react"
-import { useTranslations } from "next-intl"
+import { AlertTriangle } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 
 interface DeleteConfirmModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onConfirm: () => void
-  isLoading: boolean
-  userName: string
+  isOpen: boolean;
+  onClose: () => void;
+  onConfirm: () => void;
+  isLoading: boolean;
+  userName: string;
 }
 
 export default function DeleteConfirmModal({
@@ -27,13 +27,16 @@ export default function DeleteConfirmModal({
   isLoading,
   userName,
 }: DeleteConfirmModalProps) {
-  const t = useTranslations()
+  const t = useTranslations();
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="flex items-center gap-2 text-red-600">
+          <DialogTitle
+            className="flex items-center gap-2 text-red-600"
+            data-testid="delete-confirmation"
+          >
             <AlertTriangle className="size-5" />
             {t("modals.deleteConfirm")}
           </DialogTitle>
@@ -46,6 +49,7 @@ export default function DeleteConfirmModal({
 
         <div className="flex gap-3 pt-4">
           <Button
+            data-testid="yes"
             onClick={onConfirm}
             disabled={isLoading}
             variant="destructive"
@@ -55,11 +59,16 @@ export default function DeleteConfirmModal({
               ? t("modals.deleting")
               : t("common.yes") + ", " + t("common.delete")}
           </Button>
-          <Button onClick={onClose} variant="outline" disabled={isLoading}>
+          <Button
+            onClick={onClose}
+            data-testid="cancel"
+            variant="outline"
+            disabled={isLoading}
+          >
             {t("common.cancel")}
           </Button>
         </div>
       </DialogContent>
     </Dialog>
-  )
+  );
 }
