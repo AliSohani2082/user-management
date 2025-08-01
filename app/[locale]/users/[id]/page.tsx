@@ -1,9 +1,6 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Image from "next/image"
-import { useParams } from "next/navigation"
-import { useDeleteUserMutation, useGetUserQuery } from "@/store/api/usersApi"
+import { useDeleteUserMutation, useGetUserQuery } from "@/store/api/usersApi";
 import {
   ArrowLeft,
   ArrowRight,
@@ -11,62 +8,65 @@ import {
   Mail,
   Trash2,
   UserIcon,
-} from "lucide-react"
-import { useTranslations } from "next-intl"
+} from "lucide-react";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
+import { useParams } from "next/navigation";
+import { useState } from "react";
 
-import { useRouter } from "@/lib/i18n/navigation"
-import { useToast } from "@/hooks/use-toast"
-import DeleteConfirmModal from "@/components/elementary/DeleteConfirmModal"
-import ErrorMessage from "@/components/elementary/ErrorMessage"
-import LoadingSpinner from "@/components/elementary/LoadingSpinner"
-import UserModal from "@/components/elementary/UserModal"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import DeleteConfirmModal from "@/components/elementary/DeleteConfirmModal";
+import ErrorMessage from "@/components/elementary/ErrorMessage";
+import LoadingSpinner from "@/components/elementary/LoadingSpinner";
+import UserModal from "@/components/elementary/UserModal";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { useRouter } from "@/lib/i18n/navigation";
 
 export default function UserDetailPage() {
-  const params = useParams()
-  const router = useRouter()
-  const { toast } = useToast()
-  const t = useTranslations()
-  const userId = Number.parseInt(params.id as string)
+  const params = useParams();
+  const router = useRouter();
+  const { toast } = useToast();
+  const t = useTranslations();
+  const userId = Number.parseInt(params.id as string);
 
-  const [isEditModalOpen, setIsEditModalOpen] = useState(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   // RTK Query hooks
-  const { data: user, error, isLoading, refetch } = useGetUserQuery(userId)
-  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation()
+  const { data: user, error, isLoading, refetch } = useGetUserQuery(userId);
+  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
   const handleEdit = () => {
-    setIsEditModalOpen(true)
-  }
+    setIsEditModalOpen(true);
+  };
 
   const handleDelete = () => {
-    setIsDeleteModalOpen(true)
-  }
+    setIsDeleteModalOpen(true);
+  };
 
   const confirmDelete = async () => {
     try {
-      await deleteUser(userId).unwrap()
+      await deleteUser(userId).unwrap();
       toast({
         title: t("common.success"),
         description: t("users.userDeleted"),
-      })
-      router.push("/dashboard")
+      });
+      router.push("/dashboard");
     } catch (error) {
       toast({
         title: t("common.error"),
         description: t("users.userDeleteError"),
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
 
-  if (isLoading) return <LoadingSpinner />
-  if (error) return <ErrorMessage error={error} onRetry={refetch} />
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage error={error} onRetry={refetch} />;
   if (!user)
-    return <ErrorMessage error={t("users.noUsers")} onRetry={refetch} />
+    return <ErrorMessage error={t("users.noUsers")} onRetry={refetch} />;
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -79,7 +79,7 @@ export default function UserDetailPage() {
         >
           <ArrowLeft className="size-4 ltr:block rtl:hidden" />
           <ArrowRight className="size-4 ltr:hidden rtl:block" />
-          {t("common.back")}
+          <span className="hidden sm:inline">{t("common.back")}</span>
         </Button>
         <div className="flex-1">
           <h1 className="text-3xl font-bold text-gray-900">
@@ -87,13 +87,23 @@ export default function UserDetailPage() {
           </h1>
         </div>
         <div className="flex gap-2">
-          <Button onClick={handleEdit} variant="outline" size="sm">
-            <Edit className="mr-2 size-4" />
-            {t("common.edit")}
+          <Button
+            onClick={handleEdit}
+            variant="outline"
+            className="flex justify-center items-center gap-2"
+            size="sm"
+          >
+            <Edit className="size-4" />
+            <span className="hidden sm:inline">{t("common.edit")}</span>
           </Button>
-          <Button onClick={handleDelete} variant="destructive" size="sm">
-            <Trash2 className="mr-2 size-4" />
-            {t("common.delete")}
+          <Button
+            onClick={handleDelete}
+            variant="destructive"
+            className="flex justify-center items-center gap-2"
+            size="sm"
+          >
+            <Trash2 className="size-4" />
+            <span className="hidden sm:inline">{t("common.delete")}</span>
           </Button>
         </div>
       </div>
@@ -104,6 +114,8 @@ export default function UserDetailPage() {
           <CardHeader className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
             <div className="flex items-center gap-4">
               <Image
+                width={20}
+                height={20}
                 src={user.data.avatar || "/placeholder.svg"}
                 alt={`${user.data.first_name} ${user.data.last_name}`}
                 className="size-20 rounded-full border-4 border-white object-cover"
@@ -197,8 +209,8 @@ export default function UserDetailPage() {
         user={user.data}
         mode="edit"
         onSuccess={() => {
-          setIsEditModalOpen(false)
-          refetch()
+          setIsEditModalOpen(false);
+          refetch();
         }}
       />
 
@@ -210,5 +222,5 @@ export default function UserDetailPage() {
         userName={`${user.data.first_name} ${user.data.last_name}`}
       />
     </div>
-  )
+  );
 }

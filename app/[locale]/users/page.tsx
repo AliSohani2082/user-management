@@ -1,42 +1,43 @@
-"use client"
+"use client";
 
-import { Suspense, useState } from "react"
-import Image from "next/image"
-import { useDeleteUserMutation, useGetUsersQuery } from "@/store/api/usersApi"
-import { setCurrentPage } from "@/store/slices/usersSlice"
-import { Edit, Eye, Plus, RefreshCw, Trash2 } from "lucide-react"
-import { useTranslations } from "next-intl"
-import { useDispatch, useSelector } from "react-redux"
+import { useDeleteUserMutation, useGetUsersQuery } from "@/store/api/usersApi";
+import { setCurrentPage } from "@/store/slices/usersSlice";
+import { Edit, Eye, Plus, RefreshCw, Trash2 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import Image from "next/image";
+import { Suspense, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
-import type { RootState } from "@/store/store"
-import type { User } from "@/types/user"
+import type { RootState } from "@/store/store";
+import type { User } from "@/types/user";
 
-import { Link } from "@/lib/i18n/navigation"
-import { useToast } from "@/hooks/use-toast"
-import { useUsersFilters } from "@/hooks/use-users-filters"
-import DeleteConfirmModal from "@/components/elementary/DeleteConfirmModal"
-import ErrorMessage from "@/components/elementary/ErrorMessage"
-import LoadingSpinner from "@/components/elementary/LoadingSpinner"
-import Pagination from "@/components/elementary/Pagination"
-import UserModal from "@/components/elementary/UserModal"
-import UsersFilters from "@/components/elementary/UsersFilters"
-import UsersTableView from "@/components/elementary/UsersTableView"
-import UsersViewToggle from "@/components/elementary/UsersViewToggle"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import DeleteConfirmModal from "@/components/elementary/DeleteConfirmModal";
+import ErrorMessage from "@/components/elementary/ErrorMessage";
+import LoadingSpinner from "@/components/elementary/LoadingSpinner";
+import Pagination from "@/components/elementary/Pagination";
+import UserModal from "@/components/elementary/UserModal";
+import UsersFilters from "@/components/elementary/UsersFilters";
+import UsersTableView from "@/components/elementary/UsersTableView";
+import UsersViewToggle from "@/components/elementary/UsersViewToggle";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { useUsersFilters } from "@/hooks/use-users-filters";
+import { Link } from "@/lib/i18n/navigation";
 
 function UsersPageContent() {
-  const dispatch = useDispatch()
-  const { toast } = useToast()
-  const t = useTranslations()
-  const { currentPage } = useSelector((state: RootState) => state.users)
-  const { filters, updateFilter, resetFilters, filterUsers } = useUsersFilters()
+  const dispatch = useDispatch();
+  const { toast } = useToast();
+  const t = useTranslations();
+  const { currentPage } = useSelector((state: RootState) => state.users);
+  const { filters, updateFilter, resetFilters, filterUsers } =
+    useUsersFilters();
 
-  const [isUserModalOpen, setIsUserModalOpen] = useState(false)
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false)
-  const [selectedUser, setSelectedUser] = useState<User | null>(null)
-  const [modalMode, setModalMode] = useState<"create" | "edit">("create")
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<User | null>(null);
+  const [modalMode, setModalMode] = useState<"create" | "edit">("create");
 
   // RTK Query hooks
   const {
@@ -44,79 +45,79 @@ function UsersPageContent() {
     error,
     isLoading,
     refetch,
-  } = useGetUsersQuery(filters.page)
-  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation()
+  } = useGetUsersQuery(filters.page);
+  const [deleteUser, { isLoading: isDeleting }] = useDeleteUserMutation();
 
   const handlePageChange = (page: number) => {
-    updateFilter("page", page)
-    dispatch(setCurrentPage(page))
-  }
+    updateFilter("page", page);
+    dispatch(setCurrentPage(page));
+  };
 
   const handleCreateUser = () => {
-    setSelectedUser(null)
-    setModalMode("create")
-    setIsUserModalOpen(true)
-  }
+    setSelectedUser(null);
+    setModalMode("create");
+    setIsUserModalOpen(true);
+  };
 
   const handleEditUser = (user: User) => {
-    setSelectedUser(user)
-    setModalMode("edit")
-    setIsUserModalOpen(true)
-  }
+    setSelectedUser(user);
+    setModalMode("edit");
+    setIsUserModalOpen(true);
+  };
 
   const handleDeleteUser = (user: User) => {
-    setSelectedUser(user)
-    setIsDeleteModalOpen(true)
-  }
+    setSelectedUser(user);
+    setIsDeleteModalOpen(true);
+  };
 
   const confirmDelete = async () => {
-    if (!selectedUser) return
+    if (!selectedUser) return;
 
     try {
-      await deleteUser(selectedUser.id).unwrap()
+      await deleteUser(selectedUser.id).unwrap();
       toast({
         title: t("common.success"),
         description: t("users.userDeleted"),
-      })
-      setIsDeleteModalOpen(false)
-      setSelectedUser(null)
-      refetch()
+      });
+      setIsDeleteModalOpen(false);
+      setSelectedUser(null);
+      refetch();
     } catch (error) {
       toast({
         title: t("common.error"),
         description: t("users.userDeleteError"),
         variant: "destructive",
-      })
+      });
     }
-  }
+  };
 
   const handleReload = () => {
-    refetch()
+    refetch();
     toast({
       title: t("common.refresh"),
       description: t("users.dataRefreshed"),
-    })
-  }
+    });
+  };
 
   const handleSort = (field: string) => {
     if (filters.sortBy === field) {
-      updateFilter("sortOrder", filters.sortOrder === "asc" ? "desc" : "asc")
+      updateFilter("sortOrder", filters.sortOrder === "asc" ? "desc" : "asc");
     } else {
-      updateFilter("sortBy", field)
-      updateFilter("sortOrder", "asc")
+      updateFilter("sortBy", field);
+      updateFilter("sortOrder", "asc");
     }
-  }
+  };
 
   const handleViewChange = (view: "card" | "table") => {
-    updateFilter("view", view)
-  }
+    updateFilter("view", view);
+  };
 
-  if (isLoading) return <LoadingSpinner />
-  if (error) return <ErrorMessage error={error} onRetry={refetch} />
+  if (isLoading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage error={error} onRetry={refetch} />;
 
   // Filter and sort users
-  const allUsers = usersData?.data || []
-  const filteredUsers = filterUsers(allUsers)
+  const allUsers = usersData?.data || [];
+  const filteredUsers = filterUsers(allUsers);
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -195,6 +196,8 @@ function UsersPageContent() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center gap-3 space-x-reverse">
                     <Image
+                      width={20}
+                      height={20}
                       src={user.avatar || "/placeholder.svg"}
                       alt={`${user.first_name} ${user.last_name}`}
                       className="size-12 rounded-full object-cover"
@@ -265,8 +268,8 @@ function UsersPageContent() {
         user={selectedUser}
         mode={modalMode}
         onSuccess={() => {
-          setIsUserModalOpen(false)
-          refetch()
+          setIsUserModalOpen(false);
+          refetch();
         }}
       />
 
@@ -282,7 +285,7 @@ function UsersPageContent() {
         }
       />
     </div>
-  )
+  );
 }
 
 export default function UsersPage() {
@@ -290,5 +293,5 @@ export default function UsersPage() {
     <Suspense fallback={<LoadingSpinner />}>
       <UsersPageContent />
     </Suspense>
-  )
+  );
 }
