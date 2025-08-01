@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import React from "react";
 
 import { AppLocale } from "@/types/general";
+import { ThemeProvider } from "./theme-provider";
 
 interface Props {
   readonly children: React.ReactNode;
@@ -18,8 +19,15 @@ export async function ServerProviders({ children, locale }: Props) {
   }
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      {children}
-    </NextIntlClientProvider>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+    >
+      <NextIntlClientProvider locale={locale} messages={messages}>
+        {children}
+      </NextIntlClientProvider>
+    </ThemeProvider>
   );
 }
